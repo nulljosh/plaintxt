@@ -4,7 +4,7 @@ Plain is a native text editor for iOS and macOS. It uses the system's DocumentGr
 
 ## How it runs
 
-**Mac:** User opens a text file (`.txt`, `.md`, source file). Plain boots with a DocumentGroup interface (open/new/recent). The file opens in a native TextEditor. Type to edit. Cmd+S saves (or auto-save). Cmd+Z/Cmd+Y undo/redo. Cmd+` toggles monospaced font. Command+Enter (if a local Ollama instance is running) asks the model to complete at the cursor. Versions and iCloud sync are managed by the system. Close the window, reopen the file, it's exactly where you left it. Edit `~/Library/Application Support/Plain/plain.json` to change font size, colors, and formatting preferences.
+**Mac:** User opens a text file (`.txt`, `.md`, source file). Plain boots with a DocumentGroup interface (open/new/recent). The file opens in a native TextEditor. Type to edit. Cmd+S saves (or auto-save). Cmd+Z/Cmd+Y undo/redo. Cmd-backtick toggles monospaced font. Command+Enter (if a local Ollama instance is running) asks the model to complete at the cursor. Versions and iCloud sync are managed by the system. Close the window, reopen the file, it's exactly where you left it. Edit `~/Library/Application Support/Plain/plain.json` to change font size, colors, and formatting preferences.
 
 **iPhone/iPad:** Same editor, same file format, same sync via iCloud. Monospace toggle and font size adjustment in-app. No Ollama completion on iOS (Process API unavailable). Settings edited via in-app UI instead of a JSON file.
 
@@ -20,6 +20,11 @@ Plain is a native text editor for iOS and macOS. It uses the system's DocumentGr
 | `ios/App/Stats.swift` | Counts lines, words, and grapheme clusters (user-perceived characters, handles emoji and combining marks correctly). Shared with the CLI. |
 | `ios/App/Config.swift` | Settings loader. Reads `~/Library/Application Support/Plain/plain.json` on macOS. Returns defaults if missing. Includes font size, monospaced toggle, formatter choice, and color palette as hex strings. User can edit the JSON directly (Sublime Text style). iOS reads/writes settings via `UserDefaults` instead. |
 | `ios/App/Formatter.swift` | On-save formatting. Shells out to `prettier` (JS/JSON/Markdown), `black` (Python), or `swiftformat` (Swift) based on file type. Gracefully falls back (does not format) if the tool is missing or fails. Only on macOS; iOS skips this. |
+| `ios/App/FileListView.swift` | File browser down the side of the window, macOS only. Lists the files git knows about in the current project. Click one to open it in a new tab. Reads the list once when it appears. |
+| `ios/App/ChatView.swift` | Chat panel down the side, macOS only. You type a question, it goes to the model running on your own Mac, the answer comes back below. One question at a time, and the conversation is not kept after you close it. |
+| `ios/App/Complete.swift` | Autocomplete. Press the key and Plain asks the model running on this Mac to carry on writing from the cursor. One request, text lands in the document. Mac only, because the model listens on this machine. Says so plainly if it is not running. |
+| `ios/App/TerminalPane.swift` | A terminal at the bottom of the window, macOS only. Type a command, see what it prints. No fancy terminal features. |
+| `ios/App/OutputPane.swift` | Build and test output, macOS only. Scrolls the output and spots file-and-line references in error messages, so clicking one jumps you to that line. |
 | `ios/App/Highlight.swift` | Syntax highlighting via regex. Detects language from file extension or UTType. Applies NSAttributedString attributes (color, weight) to keywords, strings, numbers, comments, and Markdown syntax. Highlights code spans, headings, and emphasis in Markdown. Pure UTF-8 string underneath, no separate rendering layer. |
 
 ## Checks and tests
@@ -41,6 +46,7 @@ Plain is a native text editor for iOS and macOS. It uses the system's DocumentGr
 |---|---|
 | `landing/index.html` | Marketing landing page. Hero, features, screenshots, download link. |
 | `landing/privacy.html` | Privacy policy. |
+| `landing/devices.css` | Styling for the phone and laptop frames the screenshots sit inside on the landing page. |
 | `deploy.sh` | Deployment script. Builds the app and deploys the landing page to the web. |
 
 ## Design and philosophy
