@@ -14,6 +14,8 @@ Live at [plain.heyitsmejosh.com](https://plain.heyitsmejosh.com).
 
 <p><img src="screenshots/mac.png" width="560" alt="Plain on Mac colouring a Swift file"> <img src="screenshots/iphone.png" width="180" alt="Plain on iPhone"></p>
 
+<img src="progress.svg" width="460">
+
 ## What it does
 
 Plain opens a text file, a Markdown file, or a source file and lets you type. No preview pane: the file is a string and stays one. Mac and iPhone and iPad, one codebase. Autosave, versions, iCloud, Open Recent, tabs, undo and redo all come from the system. The app adds a monospaced toggle, a font size, and a line/word/character count in the corner.
