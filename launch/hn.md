@@ -1,3 +1,5 @@
+Skip: no technical hook
+
 # Hacker News: Plaintxt
 
 ## Title (68 chars)
