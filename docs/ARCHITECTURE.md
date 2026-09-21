@@ -4,7 +4,7 @@ Plain is a native text editor for iOS and macOS. It uses the system's DocumentGr
 
 ## How it runs
 
-**Mac:** User opens a text file (`.txt`, `.md`, source file). Plain boots with a DocumentGroup interface (open/new/recent). The file opens in a native TextEditor. Type to edit. Cmd+S saves (or auto-save). Cmd+Z/Cmd+Y undo/redo. Cmd+` toggles monospaced font. Command+Enter (if a local Ollama instance is running) asks the model to complete at the cursor. Versions and iCloud sync are managed by the system. Close the window, reopen the file — it's exactly where you left it. Edit `~/Library/Application Support/Plain/plain.json` to change font size, colors, and formatting preferences.
+**Mac:** User opens a text file (`.txt`, `.md`, source file). Plain boots with a DocumentGroup interface (open/new/recent). The file opens in a native TextEditor. Type to edit. Cmd+S saves (or auto-save). Cmd+Z/Cmd+Y undo/redo. Cmd+` toggles monospaced font. Command+Enter (if a local Ollama instance is running) asks the model to complete at the cursor. Versions and iCloud sync are managed by the system. Close the window, reopen the file, it's exactly where you left it. Edit `~/Library/Application Support/Plain/plain.json` to change font size, colors, and formatting preferences.
 
 **iPhone/iPad:** Same editor, same file format, same sync via iCloud. Monospace toggle and font size adjustment in-app. No Ollama completion on iOS (Process API unavailable). Settings edited via in-app UI instead of a JSON file.
 
