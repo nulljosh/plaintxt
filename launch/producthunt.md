@@ -7,7 +7,7 @@ Plaintxt
 A text editor that writes no editor code
 
 ## Description (247 chars)
-Open a file, type, save. That's the whole app. Plaintxt reads and writes text, Markdown and code files in place on Mac, iPhone and iPad, with line, word and character counts and light syntax colouring. No account, no sync, no tracking.
+Open a file, type, save. That's the whole app. Plaintxt reads and writes text, Markdown and code files in place on the Mac, with line, word and character counts and light syntax colouring. No account, no tracking.
 
 ## Topics
 - Productivity
@@ -23,10 +23,12 @@ There's also a small command line tool that shares the same counting logic as th
 
 No line numbers yet, no syntax highlighting beyond light regex colouring for code and Markdown, no multiple encodings. Those need dropping straight to NSTextView, which is the exact shortcut the whole project is built to avoid. They'll come when a real file needs them.
 
-Plaintxt is $0.99 upfront on iOS, free on the web.
+On the Mac, press ⌘↩ in a code file and a model running on your own machine through Ollama fills in at the cursor. No Ollama, nothing happens.
+
+Plaintxt is $0.99 on the Mac App Store, free on the web.
 
 ## Pricing line
-$0.99 upfront on iOS, free on the web.
+$0.99 on the Mac App Store, free on the web.
 
 ## Links
 - Web: https://plain.heyitsmejosh.com
