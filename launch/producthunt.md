@@ -25,10 +25,10 @@ No line numbers yet, no syntax highlighting beyond light regex colouring for cod
 
 On the Mac, press ⌘↩ in a code file and a model running on your own machine through Ollama fills in at the cursor. No Ollama, nothing happens.
 
-Plaintxt is $0.99 on the Mac App Store, free on the web.
+Plaintxt is free on the Mac App Store and on the web.
 
 ## Pricing line
-$0.99 on the Mac App Store, free on the web.
+Free.
 
 ## Links
 - Web: https://plain.heyitsmejosh.com
