@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CFBundleDisplayName</key>
-	<string>Plain</string>
+	<string>Plaintxt</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -27,7 +27,7 @@
 	<key>CFBundleIdentifier</key>
 	<string>com.nulljosh.plain</string>
 	<key>CFBundleName</key>
-	<string>Plain</string>
+	<string>Plaintxt</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
