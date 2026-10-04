@@ -9,6 +9,7 @@ struct EditorView: View {
     @State private var selection = AttributedTextSelection()
     @State private var completing = false
     @State private var notice: String?
+    @State private var finding = false
 
     private var highlighter: Highlighter { Highlighter(type: document.type, size: fontSize, monospaced: monospaced) }
 
@@ -67,6 +68,7 @@ struct EditorView: View {
                 .textInputAutocapitalization(.never)
                 .scrollDismissesKeyboard(.interactively)
                 #endif
+                .findNavigator(isPresented: $finding)
                 .scrollContentBackground(.hidden)
                 .padding(.horizontal, 16)
                 .padding(.top, 8)
@@ -93,6 +95,18 @@ struct EditorView: View {
                 notice = nil
             }
         }
+    }
+
+    private func run(_ tool: TextTool) {
+        let new = tool.apply(document.text)
+        guard new != document.text else { notice = "\(tool.title): nothing to change"; clearNotice(); return }
+        document.text = new
+        text = AttributedString(new)
+        recolor()
+    }
+
+    private func clearNotice() {
+        Task { try? await Task.sleep(for: .seconds(3)); notice = nil }
     }
 
     private func recolor() {
@@ -123,6 +137,14 @@ struct EditorView: View {
                     .disabled(completing)
             }
             #endif
+            Button { finding.toggle() } label: { Label("Find and Replace", systemImage: "magnifyingglass") }
+                .help("Find and replace")
+            Menu {
+                ForEach(TextTool.allCases) { tool in
+                    Button { run(tool) } label: { Label(tool.title, systemImage: tool.icon) }
+                }
+            } label: { Label("Text Tools", systemImage: "wand.and.stars") }
+                .help("Sort, de-duplicate, change case, fix whitespace")
             Toggle(isOn: $monospaced) { Label("Monospaced", systemImage: "textformat") }
                 .help("Monospaced font")
                 .keyboardShortcut("m", modifiers: [.command, .shift])

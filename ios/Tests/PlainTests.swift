@@ -93,3 +93,20 @@ final class CompleteTests: XCTestCase {
         XCTAssertTrue(CompleteError.badStatus(500).localizedDescription.contains("500"))
     }
 }
+
+final class TextToolTests: XCTestCase {
+    func testSortsLinesNaturally() { XCTAssertEqual(TextTool.sortLines.apply("b\na10\na2\n"), "a2\na10\nb\n") }
+    func testRemovesDuplicatesKeepingOrder() { XCTAssertEqual(TextTool.uniqueLines.apply("x\ny\nx\nz\ny"), "x\ny\nz") }
+    func testReversesLines() { XCTAssertEqual(TextTool.reverseLines.apply("1\n2\n3"), "3\n2\n1") }
+    func testTrimsTrailingWhitespaceOnly() { XCTAssertEqual(TextTool.trimTrailing.apply("a  \n  b\t\n"), "a\n  b\n") }
+    func testChangesCase() {
+        XCTAssertEqual(TextTool.uppercase.apply("hi"), "HI")
+        XCTAssertEqual(TextTool.lowercase.apply("HI"), "hi")
+        XCTAssertEqual(TextTool.titleCase.apply("hello big world"), "Hello Big World")
+    }
+    func testTabsAndSpacesRoundTrip() {
+        XCTAssertEqual(TextTool.tabsToSpaces.apply("\tx"), "    x")
+        XCTAssertEqual(TextTool.spacesToTabs.apply("    x"), "\tx")
+    }
+    func testEmptyTextIsSafe() { for t in TextTool.allCases { _ = t.apply("") } }
+}
