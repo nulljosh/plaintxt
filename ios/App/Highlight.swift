@@ -36,23 +36,26 @@ private let code     = try! Regex(#"```[\s\S]*?```|`[^`\n]+`"#)
 private let link     = try! Regex(#"\[[^\]\n]*\]\([^)\n]*\)"#)
 private let marker   = try! Regex(#"(?m)^\s*(?:[-*+]|\d+\.|>) "#)
 
+/// How a span is drawn on top of the base font.
+enum Face { case italic, bold, code }
+
+/// One coloured or styled stretch of the text. Later spans win over earlier ones where they overlap.
+struct Span {
+    var range: Range<String.Index>
+    var color: Color?
+    var face: Face?
+}
+
 struct Highlighter {
     var type: UTType
     var size: Double
     var monospaced: Bool
 
-    func apply(_ a: inout AttributedString) {
-        if type.kind == .text { return }   // plain text: never touch attributes
-        let base = Font.system(size: size, design: monospaced ? .monospaced : .default)
-        a.font = base
-        a.foregroundColor = nil
-        let s = String(a.characters)
-        func paint(_ r: some RegexComponent, _ color: Color? = nil, _ font: Font? = nil) {
-            for m in s.matches(of: r) {
-                guard let range = Range(m.range, in: a) else { continue }
-                if let color { a[range].foregroundColor = color }
-                if let font { a[range].font = font }
-            }
+    /// The pass shared by the SwiftUI string (Mac) and the UITextView (iOS). Plain text has none.
+    func spans(_ s: String) -> [Span] {
+        var out: [Span] = []
+        func paint(_ r: some RegexComponent, _ color: Color? = nil, _ face: Face? = nil) {
+            for m in s.matches(of: r) { out.append(Span(range: m.range, color: color, face: face)) }
         }
         switch type.kind {
         case .code:
@@ -64,10 +67,29 @@ struct Highlighter {
         case .markdown:
             paint(marker, Config.color("linkColor"))
             paint(link, Config.color("linkColor"))
-            paint(italic, nil, base.italic())
-            paint(bold, nil, base.bold())
-            paint(heading, nil, base.bold())
-            paint(code, Config.color("commentColor"), .system(size: size, design: .monospaced))
+            paint(italic, nil, .italic)
+            paint(bold, nil, .bold)
+            paint(heading, nil, .bold)
+            paint(code, Config.color("commentColor"), .code)
+        }
+        return out
+    }
+
+    func apply(_ a: inout AttributedString) {
+        if type.kind == .text { return }   // plain text: never touch attributes
+        let base = Font.system(size: size, design: monospaced ? .monospaced : .default)
+        a.font = base
+        a.foregroundColor = nil
+        let s = String(a.characters)
+        for span in spans(s) {
+            guard let range = Range(NSRange(span.range, in: s), in: a) else { continue }
+            if let c = span.color { a[range].foregroundColor = c }
+            switch span.face {
+            case .italic: a[range].font = base.italic()
+            case .bold: a[range].font = base.bold()
+            case .code: a[range].font = .system(size: size, design: .monospaced)
+            case nil: break
+            }
         }
     }
 }

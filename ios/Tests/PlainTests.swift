@@ -110,3 +110,72 @@ final class TextToolTests: XCTestCase {
     }
     func testEmptyTextIsSafe() { for t in TextTool.allCases { _ = t.apply("") } }
 }
+
+final class LineIndexTests: XCTestCase {
+    func testEmptyIsOneLine() { let i = LineIndex(""); XCTAssertEqual(i.count, 1); XCTAssertEqual(i.line(at: 0), 1) }
+    func testCountsLines() { XCTAssertEqual(LineIndex("a\nb\nc").count, 3) }
+    func testTrailingNewlineStartsEmptyLine() { XCTAssertEqual(LineIndex("a\n").count, 2) }
+    func testLineAtOffset() {
+        let i = LineIndex("ab\ncd\n\nef")   // starts: 0, 3, 6, 7
+        XCTAssertEqual(i.line(at: 0), 1); XCTAssertEqual(i.line(at: 2), 1); XCTAssertEqual(i.line(at: 3), 2)
+        XCTAssertEqual(i.line(at: 6), 3); XCTAssertEqual(i.line(at: 7), 4); XCTAssertEqual(i.line(at: 99), 4); XCTAssertEqual(i.line(at: -5), 1)
+    }
+    func testOffsetOfLineClamps() {
+        let i = LineIndex("ab\ncd\n\nef")
+        XCTAssertEqual(i.offset(ofLine: 2), 3); XCTAssertEqual(i.offset(ofLine: 4), 7)
+        XCTAssertEqual(i.offset(ofLine: 0), 0); XCTAssertEqual(i.offset(ofLine: 500), 7)
+    }
+    func testUTF16Offsets() { XCTAssertEqual(LineIndex("🍋\nx").offset(ofLine: 2), 3) }   // the lemon is two UTF-16 units
+    func testWrappedLinesCountOnce() { XCTAssertEqual(LineIndex(String(repeating: "word ", count: 500)).count, 1) }
+    func testParse() {
+        XCTAssertEqual(LineIndex.parse(" 12 "), 12); XCTAssertNil(LineIndex.parse("0")); XCTAssertNil(LineIndex.parse("-3"))
+        XCTAssertNil(LineIndex.parse("abc")); XCTAssertNil(LineIndex.parse(""))
+    }
+}
+
+final class OutlineTests: XCTestCase {
+    func testMarkdownHeadings() {
+        let t = "# Title\ntext\n## Part one ##\n### Deep\n####### seven\n#nospace"
+        XCTAssertEqual(Outline.items(in: t, kind: .markdown), [
+            OutlineItem(line: 1, level: 0, title: "Title"), OutlineItem(line: 3, level: 1, title: "Part one"),
+            OutlineItem(line: 4, level: 2, title: "Deep")])
+    }
+    func testMarkdownSkipsFencedCode() {
+        let t = "# A\n```\n# not a heading\n```\n# B"
+        XCTAssertEqual(Outline.items(in: t, kind: .markdown).map(\.title), ["A", "B"])
+    }
+    func testSwiftSymbols() {
+        let t = "import X\npublic struct Foo {\n    func bar() {}\n}\nprivate func baz() {}\nlet x = 1"
+        XCTAssertEqual(Outline.items(in: t, kind: .code), [
+            OutlineItem(line: 2, level: 0, title: "struct Foo"), OutlineItem(line: 3, level: 1, title: "func bar"),
+            OutlineItem(line: 5, level: 0, title: "func baz")])
+    }
+    func testPythonAndJS() {
+        XCTAssertEqual(Outline.items(in: "class A:\n    def m(self):\n        pass\ndef f(): pass", kind: .code).map(\.title), ["class A", "def m", "def f"])
+        XCTAssertEqual(Outline.items(in: "export function go() {}\nasync function w() {}", kind: .code).map(\.title), ["function go", "function w"])
+    }
+    func testPlainTextHasNone() { XCTAssertEqual(Outline.items(in: "# not markdown\nfunc x", kind: .text), []) }
+    func testLineNumbersAreOneBased() { XCTAssertEqual(Outline.items(in: "\n\n# C", kind: .markdown).first?.line, 3) }
+    func testWindowsLineEndings() { XCTAssertEqual(Outline.items(in: "# A\r\n## B\r\n", kind: .markdown).map(\.title), ["A", "B"]) }
+}
+
+final class MarkdownPreviewTests: XCTestCase {
+    func testBlocks() {
+        let t = "# Hi\n\nSome *text*\nmore\n\n- a\n  - b\n1. one\n> quote\n---\n```\ncode\n```"
+        XCTAssertEqual(MarkdownPreview.blocks(t), [
+            .heading(level: 1, text: "Hi"), .paragraph("Some *text* more"), .bullet(indent: 0, text: "a"), .bullet(indent: 1, text: "b"),
+            .numbered(indent: 0, number: "1", text: "one"), .quote("quote"), .rule, .code("code")])
+    }
+    func testUnterminatedFenceStillShows() { XCTAssertEqual(MarkdownPreview.blocks("```\nx"), [.code("x")]) }
+    func testEmpty() { XCTAssertEqual(MarkdownPreview.blocks(""), []) }
+    func testInlineStyles() {
+        let a = MarkdownPreview.inline("**bold** and `code`")
+        XCTAssertEqual(String(a.characters), "bold and code")
+        XCTAssertTrue(a.runs.count > 1)
+    }
+    func testInlineFallsBackToPlainText() {
+        // Unbalanced or odd markup must still show the author's characters, never throw or go blank.
+        for s in ["**unclosed", "[a](", "`", "_*_*", "\u{0}"] { XCTAssertFalse(String(MarkdownPreview.inline(s).characters).isEmpty) }
+    }
+    func testNeverChangesInput() { let t = "# x\n- y"; _ = MarkdownPreview.blocks(t); XCTAssertEqual(t, "# x\n- y") }
+}

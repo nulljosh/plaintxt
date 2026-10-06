@@ -10,6 +10,15 @@ struct EditorView: View {
     @State private var completing = false
     @State private var notice: String?
     @State private var finding = false
+    #if os(iOS)
+    @AppStorage("showLineNumbers") private var showLineNumbers = false
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    @StateObject private var controller = EditorController()
+    @State private var previewing = false
+    @State private var outlining = false
+    @State private var goingToLine = false
+    @State private var lineInput = ""
+    #endif
 
     private var highlighter: Highlighter { Highlighter(type: document.type, size: fontSize, monospaced: monospaced) }
 
@@ -17,10 +26,12 @@ struct EditorView: View {
     // "Edited" flag and no cursor reset when a Mac tab comes back.
     init(document: Binding<TextDocument>) {
         _document = document
+        #if os(macOS)
         let d = UserDefaults.standard
         var a = AttributedString(document.wrappedValue.text)
         Highlighter(type: document.wrappedValue.type, size: d.object(forKey: "fontSize") as? Double ?? 15, monospaced: d.bool(forKey: "monospaced")).apply(&a)
         _text = State(initialValue: a)
+        #endif
     }
 
     var body: some View {
@@ -54,6 +65,50 @@ struct EditorView: View {
         }
     }
 
+    #if os(iOS)
+    private var editorPane: some View {
+        VStack(spacing: 0) {
+            Group {
+                if previewing && sizeClass == .regular {
+                    HStack(spacing: 0) { codeEditor; Divider(); preview }
+                } else if previewing {
+                    preview
+                } else {
+                    codeEditor
+                }
+            }
+            footer
+        }
+        .toolbar { toolbar }
+        .sheet(isPresented: $outlining) {
+            OutlineSheet(items: Outline.items(in: document.text, kind: document.type.kind)) { jump(to: $0) }
+        }
+        .alert("Go to Line", isPresented: $goingToLine) {
+            TextField("1 to \(LineIndex(document.text).count)", text: $lineInput).keyboardType(.numberPad)
+            Button("Go") { goToLine() }
+            Button("Cancel", role: .cancel) {}
+        }
+    }
+
+    private var codeEditor: some View {
+        CodeEditor(text: $document.text, type: document.type, size: fontSize, monospaced: monospaced,
+                   showLineNumbers: showLineNumbers, controller: controller)
+    }
+
+    private var preview: some View { MarkdownPreviewView(text: document.text, size: fontSize) }
+
+    private func goToLine() {
+        defer { lineInput = "" }
+        guard let n = LineIndex.parse(lineInput) else { notice = "Not a line number"; clearNotice(); return }
+        jump(to: n)
+    }
+
+    private func jump(to line: Int) {
+        previewing = false
+        // The editor may only just have reappeared; give it a beat to exist.
+        Task { try? await Task.sleep(for: .milliseconds(120)); controller.goTo(line: line) }
+    }
+    #else
     private var editorPane: some View {
         VStack(spacing: 0) {
             TextEditor(text: $text, selection: $selection)
@@ -76,6 +131,7 @@ struct EditorView: View {
         }
         .toolbar { toolbar }
     }
+    #endif
 
     // Ask the local model to fill in at the cursor. Inserts at wherever the cursor is when the answer arrives.
     private func complete() {
@@ -137,8 +193,19 @@ struct EditorView: View {
                     .disabled(completing)
             }
             #endif
+            #if os(iOS)
+            Button { controller.find() } label: { Label("Find and Replace", systemImage: "magnifyingglass") }
+                .disabled(previewing)
+            Menu {
+                Toggle(isOn: $showLineNumbers) { Label("Line Numbers", systemImage: "list.number") }
+                Button { lineInput = ""; goingToLine = true } label: { Label("Go to Line", systemImage: "arrow.right.to.line") }
+                Button { outlining = true } label: { Label("Outline", systemImage: "list.bullet.indent") }
+                Toggle(isOn: $previewing) { Label("Markdown Preview", systemImage: "doc.richtext") }
+            } label: { Label("View", systemImage: "sidebar.squares.left") }
+            #else
             Button { finding.toggle() } label: { Label("Find and Replace", systemImage: "magnifyingglass") }
                 .help("Find and replace")
+            #endif
             Menu {
                 ForEach(TextTool.allCases) { tool in
                     Button { run(tool) } label: { Label(tool.title, systemImage: tool.icon) }
@@ -165,3 +232,41 @@ struct EditorView: View {
         }
     }
 }
+
+#if os(iOS)
+/// Headings or symbols; tap one and the editor jumps there.
+struct OutlineSheet: View {
+    let items: [OutlineItem]
+    let jump: (Int) -> Void
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            Group {
+                if items.isEmpty {
+                    ContentUnavailableView("Nothing to outline", systemImage: "list.bullet.indent",
+                                           description: Text("Headings show up in Markdown, functions and types in code."))
+                } else {
+                    List(items) { item in
+                        Button { dismiss(); jump(item.line) } label: {
+                            HStack {
+                                Text(item.title).fontWeight(item.level == 0 ? .semibold : .regular)
+                                    .padding(.leading, CGFloat(item.level) * 16)
+                                Spacer()
+                                Text("\(item.line)").foregroundStyle(.secondary).monospacedDigit()
+                            }
+                        }
+                        .foregroundStyle(.primary)
+                    }
+                    .accessibilityIdentifier("outlineList")
+                }
+            }
+            .navigationTitle("Outline")
+            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarBackButtonHidden(true)
+            .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
+        }
+        .presentationDetents([.medium, .large])
+    }
+}
+#endif
