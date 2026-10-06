@@ -18,7 +18,9 @@ Live at [plain.heyitsmejosh.com](https://plain.heyitsmejosh.com).
 
 ## What it does
 
-Plain opens a text file, a Markdown file, or a source file and lets you type. No preview pane: the file is a string and stays one. Mac and iPhone and iPad, one codebase. Autosave, versions, iCloud, Open Recent, tabs, undo and redo all come from the system. The app adds a monospaced toggle, a font size, and a line/word/character count in the corner.
+Plain opens a text file, a Markdown file, or a source file and lets you type. The file is a string and stays one. Mac and iPhone and iPad, one codebase. Autosave, versions, iCloud, Open Recent, tabs, undo and redo all come from the system. The app adds a monospaced toggle, a font size, and a line/word/character count in the corner.
+
+On iPhone and iPad the editor is a UITextView wrapped for SwiftUI, so it can do things a stock text box cannot. Turn on line numbers in the View menu and a gutter follows the text as you scroll; a long line that wraps still gets one number. Go to Line jumps to any line. Outline lists the headings of a Markdown file or the functions and types of a source file, and a tap puts the caret on that line. Markdown Preview renders the file next to the editor on iPad, or in place of it on iPhone. The preview is read only and never touches the file. Find and Replace is the system one.
 
 Open a `.md` and headings, emphasis, links and code spans get colour. Open a `.swift`, `.py`, `.js` or anything else that counts as source and keywords, strings, numbers and comments do. Same string, same text view; the colour is attributes on it, not a rendering layer. Plain `.txt` stays plain.
 
