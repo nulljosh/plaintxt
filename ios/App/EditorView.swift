@@ -104,7 +104,7 @@ struct EditorView: View {
     }
 
     private func jump(to line: Int) {
-        previewing = false
+        if sizeClass != .regular { previewing = false }   // side by side keeps the preview; a phone swaps back to the editor
         // The editor may only just have reappeared; give it a beat to exist.
         Task { try? await Task.sleep(for: .milliseconds(120)); controller.goTo(line: line) }
     }
