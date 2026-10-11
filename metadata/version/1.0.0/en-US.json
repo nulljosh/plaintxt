@@ -1,7 +1,7 @@
 {
   "description": "Plaintxt is a text editor. Open a file, type, save. That is the whole app.\n\nIt reads and writes plain text, Markdown, and code files in place, so the file stays where it was and other apps see your changes. Line, word, and character counts sit at the bottom. Code and Markdown get light syntax colouring.\n\n• Opens .txt, .md, and source files in place\n• Line, word, and character counts\n• Syntax colouring for code and Markdown\n• No account, no sync, no tracking\n• iPhone, iPad, and Mac\n\nPlaintxt collects nothing. Your files never leave your device unless you move them.",
   "keywords": "text editor,plain text,markdown,notes,writer,code editor,txt,minimal,simple",
-  "marketingUrl": "https://plain.heyitsmejosh.com",
-  "supportUrl": "https://plain.heyitsmejosh.com",
+  "marketingUrl": "https://plain.jaybulb.com",
+  "supportUrl": "https://plain.jaybulb.com",
   "promotionalText": "Open a file, type, save. A text editor with nothing else in it."
 }
