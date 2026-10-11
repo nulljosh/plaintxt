@@ -7,3 +7,7 @@ directory = "./landing"
 [[routes]]
 pattern = "plain.heyitsmejosh.com"
 custom_domain = true
+
+[[routes]]
+pattern = "plain.jaybulb.com"
+custom_domain = true
