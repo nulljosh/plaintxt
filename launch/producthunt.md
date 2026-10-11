@@ -31,6 +31,6 @@ Plaintxt is free on the Mac App Store and on the web.
 Free.
 
 ## Links
-- Web: https://plain.heyitsmejosh.com
+- Web: https://plain.jaybulb.com
 - App Store: https://apps.apple.com/app/id6809841903
 - GitHub: https://github.com/nulljosh/plaintxt

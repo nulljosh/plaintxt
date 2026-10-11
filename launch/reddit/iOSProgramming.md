@@ -10,4 +10,4 @@ Shipped Plaintxt, a text editor for Mac, iPhone and iPad built from one xcodegen
 
 The only real logic is a Stats.swift that counts lines, words and grapheme clusters (grapheme, not UTF-16 units, so multi-codepoint emoji count as one character), shared between the app and a small CLI target. Syntax colouring is a handful of regexes over AttributedString, recoloured per keystroke, nothing fancier yet.
 
-$0.99 upfront on iOS, free on the web at plain.heyitsmejosh.com. Happy to talk through the DocumentGroup approach or where it breaks down (no line numbers yet, that needs dropping to NSTextView directly).
+$0.99 upfront on iOS, free on the web at plain.jaybulb.com. Happy to talk through the DocumentGroup approach or where it breaks down (no line numbers yet, that needs dropping to NSTextView directly).

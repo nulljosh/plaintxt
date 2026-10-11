@@ -10,4 +10,4 @@ Plaintxt is a SwiftUI DocumentGroup wrapped around a plain TextEditor, shipped f
 
 Everything a text editor gets judged on, open, save, autosave, undo, find, dictation, VoiceOver, iCloud Drive, document versions, comes straight from DocumentGroup and TextEditor instead of being rebuilt. The app adds three things the framework doesn't give you: a monospaced toggle, a font size stepper, and a status line.
 
-It's $0.99 upfront on iOS, free on the web at plain.heyitsmejosh.com. Source is on GitHub. Curious what people think of building an editor by mostly not building one.
+It's $0.99 upfront on iOS, free on the web at plain.jaybulb.com. Source is on GitHub. Curious what people think of building an editor by mostly not building one.
