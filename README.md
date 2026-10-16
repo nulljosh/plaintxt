@@ -10,7 +10,7 @@ A text file is a string. Opening, saving, undo, selection, scrolling, accessibil
 
 That's the gap.
 
-Live at [plain.heyitsmejosh.com](https://plain.heyitsmejosh.com).
+Live at [plain.jaybulb.com](https://plain.jaybulb.com).
 
 <p><img src="screenshots/mac.png" width="560" alt="Plain on Mac colouring a Swift file"> <img src="screenshots/iphone.png" width="180" alt="Plain on iPhone"></p>
 
