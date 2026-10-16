@@ -20,3 +20,7 @@
 - Rewrite the Mac app in C/C++/Rust. No. It is already native (SwiftUI over AppKit's text view); the language is not where time goes. Revisit only if a measured hot path appears.
 - Web: type, edit and use Plain in the browser (a textarea plus the same regex colouring; keep the no-editor-code rule). Deferred; landing demo is sufficient for launch.
 - [ ] native (kmp) port, sibling apps have one, this doesn't (project-sync 2026-09-05)
+
+## Ingested 2026-10-16
+- [ ] iOS ship to App Store. iOS 1.0.0 is waiting for review after the 2026-10-05 4.3 / 4.2.6 message; Joshua's note on 10-14: "Spam". Mac live. (screenshots: notes/attachments/2026-10-16/plain-1.png, notes/attachments/2026-10-16/plain-2.png)
+- [ ] iOS ship to App Store. iOS 1.0.0 is waiting for review after the 2026-10-05 4.3 / 4.2.6 message; Joshua's note on 10-14: "Spam". Mac live. (screenshots: notes/attachments/2026-10-16/plain-1.png, notes/attachments/2026-10-16/plain-2.png)
