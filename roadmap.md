@@ -23,4 +23,3 @@
 
 ## Ingested 2026-10-16
 - [ ] iOS ship to App Store. iOS 1.0.0 is waiting for review after the 2026-10-05 4.3 / 4.2.6 message; Joshua's note on 10-14: "Spam". Mac live. (screenshots: notes/attachments/2026-10-16/plain-1.png, notes/attachments/2026-10-16/plain-2.png)
-- [ ] iOS ship to App Store. iOS 1.0.0 is waiting for review after the 2026-10-05 4.3 / 4.2.6 message; Joshua's note on 10-14: "Spam". Mac live. (screenshots: notes/attachments/2026-10-16/plain-1.png, notes/attachments/2026-10-16/plain-2.png)
