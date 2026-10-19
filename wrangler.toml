@@ -11,3 +11,7 @@ custom_domain = true
 [[routes]]
 pattern = "plain.jaybulb.com"
 custom_domain = true
+
+[[routes]]
+pattern = "plaintxt.jaybulb.com"
+custom_domain = true
