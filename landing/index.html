@@ -2,252 +2,166 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Plaintxt - a text editor that writes no editor code</title>
+<meta name="description" content="A plain text editor and agent IDE for Mac, iPhone and iPad. Open a text, Markdown or code file, type, done. Autosave, undo, iCloud and versions come from the system. Plus a command line tool.">
+<meta property="og:title" content="Plaintxt - a text editor">
+<meta property="og:description" content="Text, Markdown, code: open it, type, done. Mac, iPhone, iPad, and a command line.">
+<meta property="og:type" content="website">
 <meta property="og:image" content="https://plain.jaybulb.com/og.png">
 <meta property="og:url" content="https://plain.jaybulb.com/">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image" content="https://plain.jaybulb.com/og.png">
 <link rel="canonical" href="https://plain.jaybulb.com/">
-<meta name="description" content="A plain text editor and agent IDE for Mac, iPhone and iPad. Open a text, Markdown or code file, type, done. Autosave, undo, iCloud and versions come from the system. Plus a command line tool.">
-<meta name="theme-color" content="#f5f5f7">
-<meta property="og:title" content="Plaintxt - a text editor">
-<meta property="og:description" content="Text, Markdown, code: open it, type, done. Mac, iPhone, iPad, and a command line.">
-<meta property="og:type" content="website">
+<meta name="theme-color" content="#fdfdfd" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0b0b0b" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="tokens.css">
+<link rel="stylesheet" href="landing.css">
 <style>
-@import url("https://jaybulb.com/tokens.css");
-@import url("devices.css");
-/* Palette from the icon, not the estate's yellow: graphite ink on cool grey. */
-:root{--bg:#fff;--text:#1d1d1f;--text2:#6e6e73;--text3:#a1a1a6;--bg2:#f5f5f7;--ink:#1d1d1f;--paper:#f5f5f7;--accent:var(--ink);--link:var(--ink);--border:#d2d2d7;--btn-fg:#fff;}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#000;--text:#f5f5f7;--text2:#a1a1a6;--text3:#6e6e73;--accent:var(--paper);--link:var(--paper);--bg2:#2c2c2e;--border:#3a3a3c;--btn-fg:var(--ink);}}
-:root[data-theme="dark"]{--bg:#000;--text:#f5f5f7;--text2:#a1a1a6;--text3:#6e6e73;--accent:var(--paper);--link:var(--paper);--bg2:#2c2c2e;--border:#3a3a3c;--btn-fg:var(--ink);}
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-body { background: var(--bg); color: var(--text); font-family: var(--font-body); line-height: 1.6; -webkit-font-smoothing: antialiased; }
-a { color: var(--link, var(--accent)); text-decoration: none; }
-a:hover { text-decoration: underline; }
-.container { max-width: 800px; margin: 0 auto; padding: 0 2rem; }
-.hero { position: relative; isolation: isolate; overflow: hidden; padding: clamp(5rem, 12vw, 8rem) 0 5.5rem; text-align: center; background: var(--bg2); }
-.hero .container { position: relative; z-index: 2; }
-.hero-float { position: absolute; inset: -48px; z-index: 0; color: var(--text); opacity: 0.32; pointer-events: none; user-select: none; }
-.float { position: absolute; width: var(--size); height: var(--size); margin: calc(var(--size) / -2) 0 0 calc(var(--size) / -2); animation: drift var(--dur, 16s) ease-in-out var(--delay, 0s) infinite alternate; }
-.float svg { display: block; width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; animation: bob var(--bdur, 12s) ease-in-out var(--bdelay, 0s) infinite alternate; }
-@keyframes drift { to { transform: translate(var(--dx, 0px), var(--dy, 0px)); } }
-@keyframes bob { from { transform: rotate(calc(var(--rot, 0deg) * -1)); } to { transform: rotate(var(--rot, 0deg)); } }
-@media (prefers-reduced-motion: reduce) { .float, .float svg { animation: none; } }
-.hero::after { content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(ellipse 56% 50% at 50% 46%, var(--bg2) 20%, transparent 76%), linear-gradient(var(--bg2), transparent 14%, transparent 86%, var(--bg2)); }
-.hero-icon { width: 88px; height: 88px; border-radius: 20px; }
-h1 { font-size: clamp(2.2rem, 6vw, 3.2rem); line-height: 1.1; letter-spacing: -0.02em; margin-top: 1.25rem; }
-.hero .container { padding: 0 1.25rem; }
-.tagline { color: var(--text2); font-size: 1.2rem; margin: 1.25rem auto 2.25rem; max-width: 32rem; }
-.cta { display: inline-flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
-.btn { display: inline-block; padding: 0.8rem 1.75rem; border-radius: 6px; font-weight: 600; border: 1px solid var(--accent); background: var(--accent); color: var(--btn-fg); }
-.btn:hover { text-decoration: none; opacity: 0.9; }
-.btn.ghost { background: transparent; color: var(--link, var(--accent)); }
-section.container { padding: 4rem 2rem; border-top: 1px solid var(--border); }
-section.container > * { max-width: 100%; }
-
-h2 { font-size: 1.65rem; letter-spacing: -0.01em; padding-top: 0.75rem; margin-bottom: 1.25rem; }
-p + p { margin-top: 1rem; }
-.grid { display: grid; gap: 1.5rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-top: 1.5rem; }
-.card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 1.5rem; }
-.card h3 { font-size: 1rem; margin-bottom: 0.35rem; }
-.card p { color: var(--text2); font-size: 0.95rem; }
-pre { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 1rem 1.25rem; overflow-x: auto; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 0.9rem; line-height: 1.5; margin-top: 1rem; }
-.shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:40px;align-items:start;margin-top:1.5rem}
-.shots figure{margin:0}
-.shots .device{--device-w:100%;margin:0 auto}
-.shots .device-iphone{--device-w:240px}
-.shots figure:has(.device-iphone){display:flex;flex-direction:column;align-items:center}
-.shots figcaption{margin-top:8px;font-size:.9rem;opacity:.7}
-.demo-editor{width:100%;height:220px;border:0;outline:0;resize:none;background:transparent;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif;font-size:.95rem;line-height:1.6;padding:14px 16px;}
-.demo-status{display:flex;gap:1rem;padding:8px 16px;background:transparent;border-top:1px solid var(--border);font-size:.8rem;color:var(--text2);font-variant-numeric:tabular-nums;}
-footer { border-top: 1px solid var(--border); padding: 2.5rem 0; color: var(--text2); font-size: 0.9rem; }
+.editor{position:relative;max-width:720px;margin:0 auto;background:var(--bg);color:var(--text);border-radius:20px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.28);text-align:left}
+.editor-bar{display:flex;gap:8px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);font-size:13px;color:var(--sub)}
+.editor-bar i{width:12px;height:12px;border-radius:50%;background:var(--line);display:inline-block}
+.editor-bar span{margin-left:8px}
+.demo-editor{display:block;width:100%;height:240px;border:0;outline:0;resize:none;background:transparent;color:var(--text);font:17px/1.6 var(--font);padding:16px}
+.demo-status{padding:8px 16px;border-top:1px solid var(--line);font-size:13px;color:var(--sub);font-variant-numeric:tabular-nums}
+.term pre{margin:0}
+.jb-signup{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:460px;margin:32px auto 0;font:inherit;color:inherit}
+.jb-signup label{flex-basis:100%;text-align:center;color:var(--sub)}
+.jb-signup input[type=email]{flex:1;min-width:200px;height:48px;padding:0 20px;border:1px solid var(--line);border-radius:999px;background:transparent;color:inherit;font:inherit}
+.jb-hp{position:absolute;left:-9999px;width:1px;height:1px}
+.jb-msg{display:none;flex-basis:100%;text-align:center;margin:4px 0 0}
+.jb-msg:target{display:block}
 </style>
+<script src="landing.js" defer></script>
 </head>
 <body>
 
-<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
-  <symbol id="i-doc" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/></symbol>
-  <symbol id="i-cursor" viewBox="0 0 24 24"><path d="M9 3h2.5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H9M15 3h-2.5"/><path d="M15 21h-2.5"/></symbol>
-  <symbol id="i-pencil" viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M13 8l3 3"/></symbol>
-  <symbol id="i-lines" viewBox="0 0 24 24"><path d="M4 7h16M4 12h10M4 17h13"/></symbol>
-</svg>
-
-<header class="hero">
-  <div class="hero-float" id="heroFloat" aria-hidden="true"></div>
-  <div class="container">
-    <img class="hero-icon" src="icon.svg" alt="Plaintxt icon" width="88" height="88">
-    <h1>Plaintxt</h1>
-    <p class="tagline">Text editor + agent IDE. Syntax highlighting, on-save formatting, file browser, chat with your code. Mac, iPhone, iPad, and CLI.</p>
-    <div class="cta">
-      <a class="btn" href="https://github.com/nulljosh/plaintxt">Source on GitHub</a>
-      <a class="btn ghost" href="#why">Why</a>
-    </div>
+<header class="nav" aria-label="Site">
+  <nav class="nav-links" aria-label="Main">
+    <a href="#features">Why</a>
+    <a href="#cli">CLI</a>
+  </nav>
+  <a class="nav-brand" href="#top" aria-label="Plaintxt home"><img src="icon.svg" alt="" width="28" height="28"><span>Plaintxt</span></a>
+  <div class="nav-end">
+    <a class="nav-get" href="https://jaybulb.com/docs.html#plain">Docs</a>
+    <a class="btn btn-solid" href="https://github.com/nulljosh/plaintxt">GitHub</a>
   </div>
 </header>
 
-<main>
-  <section id="why" class="container">
-    <h2>They don't make them like Sublime anymore</h2>
-    <p>Editors today are a div soup, a browser in a trench coat, or a subscription. Every one of them redraws the cursor by hand.</p>
-    <p>A text file is a string. Opening, saving, undo, selection, scrolling, dictation, VoiceOver: the OS already does all of that better than any JavaScript will. Plaintxt is that idea taken all the way. No web view. No rendering layer. Nothing between you and the file.</p>
-  </section>
+<main id="top">
+<section class="hero" id="hero">
+  <div class="wrap center hero-copy">
+    <p class="label">Text editor and agent IDE</p>
+    <h1>Open a file. Type. Done.</h1>
+    <p class="lead">Syntax highlighting, format on save, a file browser and chat with your code. Mac, iPhone, iPad and the command line.</p>
+    <div class="cta">
+      <a class="btn btn-solid" href="https://github.com/nulljosh/plaintxt">Source on GitHub</a>
+      <a class="btn btn-ghost" href="#features">See what it does</a>
+    </div>
+    <p class="fine">No accounts. No network. Free.</p>
+  </div>
 
-  <section class="container">
-    <h2>What it looks like</h2>
-    <div class="shots">
-      <figure>
-        <div class="device device-mac" data-title="Plaintxt"><div class="device-screen">
-          <textarea class="demo-editor" id="demoText" spellcheck="false" placeholder="Type here. It's the real counter.">Open a file. Type. Done.</textarea>
-          <div class="demo-status" id="demoStatus">2 lines, 5 words, 25 chars</div>
-        </div></div>
-        <figcaption>This is the real counter, running in your browser. Type anything.</figcaption>
+  <div class="demo-wrap reveal" id="demo">
+    <div class="stage">
+      <div class="editor">
+        <div class="editor-bar" aria-hidden="true"><i></i><i></i><i></i><span>notes.txt</span></div>
+        <textarea class="demo-editor" id="demoText" spellcheck="false" aria-label="Try the editor" placeholder="Type here. It's the real counter.">Open a file. Type. Done.</textarea>
+        <div class="demo-status" id="demoStatus">1 line, 5 words, 24 chars</div>
+      </div>
+    </div>
+    <p class="demo-hint">That is the real counter, running in your browser. Type anything.</p>
+  </div>
+</section>
+
+<section class="band" id="features">
+  <div class="band-head">
+    <div class="band-copy reveal">
+      <p class="label">They don't make them like Sublime anymore</p>
+      <h2>A text file is a string</h2>
+      <p>Opening, saving, undo, selection, scrolling, dictation, VoiceOver: the OS already does all of that better than any JavaScript will. Plaintxt is that idea taken seriously.</p>
+    </div>
+  </div>
+  <div class="cells">
+    <article class="cell reveal"><p class="label">Colour</p><h3>Plain text stays plain</h3><p>Markdown and code get colour as attributes on the same string, not a rendering layer.</p></article>
+    <article class="cell reveal"><p class="label">Complete</p><h3>Help on your own machine</h3><p>Press ⌘↩ in a code file and a local Ollama model fills in at the cursor. Nothing leaves the computer.</p></article>
+    <article class="cell reveal"><p class="label">Settings</p><h3>Settings are a text file</h3><p>plain.json holds the font, the model and five colours as hex. Edit, save, done.</p></article>
+    <article class="cell reveal"><p class="label">IDE</p><h3>Files, tabs, chat</h3><p>On the Mac: your repo in a sidebar, tabs, format on save, and chat that sees the open file.</p></article>
+    <article class="cell reveal"><p class="label">Build</p><h3>Build, test, terminal</h3><p>Run Swift and Python tests and shell commands in the output pane.</p></article>
+    <article class="cell reveal"><p class="label">Private</p><h3>No accounts, no network</h3><p>Plaintxt never talks to a server. Your file is the only thing on disk.</p></article>
+  </div>
+</section>
+
+<section class="sec field" id="cli">
+  <div class="wrap center">
+    <div class="reveal">
+      <p class="label">From the command line</p>
+      <h2>One binary</h2>
+      <p class="body">It opens a file in the app, or counts it.</p>
+    </div>
+    <div class="stage term-stage reveal">
+      <figure class="term" aria-label="The plain command">
+<pre><span class="dim">$</span> plain notes.txt
+<span class="dim">opens in Plaintxt (.txt, .md, any code)</span>
+<span class="dim">$</span> plain stat notes.txt
+3 lines, 12 words, 71 chars
+<span class="dim">$</span> cat x | plain stat
+<span class="dim">counts from stdin</span></pre>
       </figure>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section class="container">
-    <h2>Colour, and a little help</h2>
-    <p>Open a Markdown file and headings, emphasis, links and code spans get colour. Open source code and keywords, strings, numbers and comments do. It is attributes on the same string in the same system text view, not a rendering layer. Plain text stays plain.</p>
-    <p>On the Mac, press ⌘↩ in a code file and Plaintxt asks a model running on your own machine (Ollama) to fill in at the cursor. Nothing leaves the computer. No Ollama, no harm done.</p>
-    <p>Settings are a text file. Launch Plaintxt with nothing to open and it opens <code>plain.json</code>: font size, monospaced, the completion model, and the five colours as hex. Edit, save, done. Like Sublime.</p>
-  </section>
-
-  <section class="container">
-    <h2>Agent IDE (Mac only)</h2>
-    <p>Plaintxt on Mac is a minimalist IDE. Left sidebar lists files from your git repo. Click opens in a new tab. Center is the editor with syntax highlighting and format-on-save (prettier, black, swiftformat). Bottom tabs: chat with Ollama about your code, build output, and a terminal.</p>
-    <p>Chat includes file context automatically. Build and test buttons run Swift, Python tests in the output pane. Terminal runs shell commands. Nothing is saved remotely. Your machine, your agent, your code.</p>
-  </section>
-
-  <section class="container">
-    <h2>From the command line</h2>
-    <p>One binary. It opens a file in the app, or counts it.</p>
-<pre>plain notes.txt          open in Plaintxt (.txt, .md, any code)
-plain stat notes.txt     3 lines, 12 words, 71 chars
-cat x | plain stat       counts from stdin</pre>
-  </section>
-
-  <section class="container">
-    <h2>Everywhere you are</h2>
-    <div class="grid">
-      <div class="card"><h3>Mac</h3><p>File browser, tabs, versions, autosave. Chat with your code. Build and terminal panes. Format on save.</p></div>
-      <div class="card"><h3>iPhone &amp; iPad</h3><p>Any file in the Files app or iCloud Drive. Split view on iPad. Syntax highlighting everywhere.</p></div>
-      <div class="card"><h3>Terminal</h3><p>Build with one swiftc line. Stats mode counts lines, words, chars. No package manager, no runtime.</p></div>
+<section class="sec plats" id="get">
+  <div class="wrap center">
+    <p class="label reveal">Everywhere you are</p>
+    <h2 class="reveal">Mac, iPhone, iPad, terminal</h2>
+    <div class="plat-row">
+      <div class="reveal"><small>macOS</small><b>Mac</b><p>File browser, tabs, versions, autosave, chat, build and terminal panes.</p></div>
+      <div class="reveal"><small>iOS and iPadOS</small><b>iPhone and iPad</b><p>Any file in Files or iCloud Drive. Split view on iPad.</p></div>
+      <div class="reveal"><small>Any shell</small><b>Terminal</b><p>One swiftc line to build. Counts lines, words and chars.</p></div>
     </div>
-  </section>
-
-  <section class="container">
-    <h2>No accounts, no network</h2>
-    <p>Plaintxt never talks to a server. There is nothing to sign into and nothing to collect. Your file is the only thing on disk.</p>
-  </section>
-
-  <!-- Email capture. Posts to authmail.jaybulb.com/signup (Resend "General" audience). No JS: the Worker 303s back to #signed-up. -->
-  <form class="jb-signup" action="https://authmail.jaybulb.com/signup" method="post">
-    <label for="jb-email">New apps and updates, no spam.</label>
-    <input id="jb-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required maxlength="254">
-    <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="jb-hp">
-    <button type="submit">Subscribe</button>
-    <p id="signed-up" class="jb-msg" role="status">You're on the list.</p>
-    <p id="signup-failed" class="jb-msg" role="status">That email didn't work. Try again?</p>
-  </form>
-  <style>
-  .jb-signup{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:460px;margin:40px auto;padding:0 16px;font:inherit;color:inherit}
-  .jb-signup label{flex-basis:100%;text-align:center;opacity:.7}
-  .jb-signup input[type=email]{flex:1;min-width:200px;padding:10px 12px;border:1px solid currentColor;border-radius:8px;background:transparent;color:inherit;font:inherit}
-  .jb-signup button{padding:10px 16px;border:1px solid currentColor;border-radius:8px;background:transparent;color:inherit;font:inherit;cursor:pointer}
-  .jb-hp{position:absolute;left:-9999px;width:1px;height:1px}
-  .jb-msg{display:none;flex-basis:100%;text-align:center;margin:4px 0 0}
-  .jb-msg:target{display:block}
-  </style>
+    <form class="jb-signup" action="https://authmail.jaybulb.com/signup" method="post">
+      <label for="jb-email">New apps and updates, no spam.</label>
+      <input id="jb-email" type="email" name="email" placeholder="you@example.com" autocomplete="email" required maxlength="254">
+      <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="jb-hp">
+      <button class="btn btn-solid" type="submit">Subscribe</button>
+      <p id="signed-up" class="jb-msg" role="status">You're on the list.</p>
+      <p id="signup-failed" class="jb-msg" role="status">That email didn't work. Try again?</p>
+    </form>
+  </div>
+</section>
 </main>
 
-<footer><div class="container">Plaintxt · <a href="https://github.com/nulljosh/plaintxt">GitHub</a> &middot; <a href="https://jaybulb.com/docs.html#plain">Docs</a> · MIT</div></footer>
+<footer class="foot" id="footer">
+  <div class="foot-top">
+    <div class="foot-brand"><img src="icon.svg" alt="" width="40" height="40"><b>Plaintxt</b><p>Open a file. Type. Done.</p></div>
+    <nav class="foot-cols" aria-label="Footer">
+      <div><p class="label">Plaintxt</p><a href="#features">Why</a><a href="#cli">CLI</a><a href="#get">Platforms</a></div>
+      <div><p class="label">Source</p><a href="https://github.com/nulljosh/plaintxt">GitHub</a><a href="https://github.com/nulljosh/plaintxt/releases">Releases</a><a href="https://jaybulb.com/docs.html#plain">Docs</a><a href="privacy.html">Privacy</a></div>
+      <div><p class="label">More</p><a href="mailto:trommatic@icloud.com?subject=Plaintxt">Feedback</a><a href="https://jaybulb.com">More apps</a><a href="#top">Back to top</a></div>
+    </nav>
+  </div>
+  <p class="legal">&copy; 2026 Joshua Trommel &middot; MIT License</p>
+</footer>
 <script>
 // Same rules as ios/App/Stats.swift: empty doc is 1 line, no line for a trailing newline.
 (function () {
   var t = document.getElementById('demoText'), s = document.getElementById('demoStatus');
   if (!t || !s) return;
   function graphemeCount(text) {
-    if (window.Intl && Intl.Segmenter) {
-      return [...new Intl.Segmenter().segment(text)].length;
-    }
+    if (window.Intl && Intl.Segmenter) return [...new Intl.Segmenter().segment(text)].length;
     return [...text].length;
   }
   function update() {
     var text = t.value;
     var lines = 1 + (text.match(/\n/g) || []).length - (text.endsWith('\n') ? 1 : 0);
     var words = text.split(/\s+/).filter(Boolean).length;
-    s.textContent = lines + ' lines, ' + words + ' words, ' + graphemeCount(text) + ' chars';
+    s.textContent = lines + (lines === 1 ? ' line, ' : ' lines, ') + words + (words === 1 ? ' word, ' : ' words, ') + graphemeCount(text) + ' chars';
   }
   t.addEventListener('input', update);
   update();
-})();
-
-// Documents, cursors, pencils and text lines drifting behind the hero. Same field as nimble's.
-(function () {
-  var field = document.getElementById('heroFloat');
-  if (!field) return;
-  var rand = function (a, b) { return a + Math.random() * (b - a); };
-  var narrow = window.innerWidth < 640;
-  var icons = ['i-doc', 'i-cursor', 'i-pencil', 'i-lines'];
-  var edgeAt = function (x, y) { var nx = (x - 50) / 50, ny = (y - 50) / 50; return Math.min(1, Math.sqrt(nx * nx + ny * ny)); };
-  var cols = narrow ? 3 : Math.max(3, Math.min(7, Math.round(window.innerWidth / 190)));
-  var rows = narrow ? 5 : 4;
-  var minSize = narrow ? 18 : 28, maxSize = narrow ? 34 : 56;
-  for (var r = 0; r < rows; r++) {
-    for (var c = 0; c < cols; c++) {
-      var el = document.createElement('div');
-      var x = (c + rand(0.15, 0.85)) / cols * 100, y = (r + rand(0.15, 0.85)) / rows * 100;
-      el.className = 'float';
-      el.style.left = x.toFixed(2) + '%'; el.style.top = y.toFixed(2) + '%';
-      el.style.opacity = (0.3 + 0.7 * edgeAt(x, y)).toFixed(2);
-      el.style.setProperty('--size', rand(minSize, maxSize).toFixed(1) + 'px');
-      el.style.setProperty('--rot', rand(4, 10).toFixed(1) + 'deg');
-      el.style.setProperty('--bdur', rand(7, 16).toFixed(1) + 's');
-      el.style.setProperty('--bdelay', (-rand(0, 16)).toFixed(1) + 's');
-      var dx = rand(12, 26) * (Math.random() < 0.5 ? -1 : 1), dy = rand(10, 22) * (Math.random() < 0.5 ? -1 : 1);
-      el.style.setProperty('--dx', dx.toFixed(1) + 'px'); el.style.setProperty('--dy', dy.toFixed(1) + 'px');
-      el.style.setProperty('--dur', rand(12, 26).toFixed(1) + 's');
-      el.style.setProperty('--delay', (-rand(0, 26)).toFixed(1) + 's');
-      el.innerHTML = '<svg viewBox="0 0 24 24"><use href="#' + icons[Math.floor(Math.random() * icons.length)] + '"/></svg>';
-      field.appendChild(el);
-    }
-  }
-})();
-</script>
-<style>
-html.js .reveal{opacity:0;transform:translateY(20px)}
-html.js .reveal.in-view{opacity:1;transform:translateY(0);transition:opacity .6s ease,transform .6s ease}
-@media (prefers-reduced-motion: reduce){html.js .reveal{opacity:1!important;transform:none!important;transition:none!important}}
-</style>
-<script>
-document.documentElement.classList.add('js');
-(function(){
-  var reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (!reduced && 'IntersectionObserver' in window) {
-    var targets = document.querySelectorAll('main section, .card');
-    targets.forEach(function(el){ el.classList.add('reveal'); });
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(e){ if (e.isIntersecting) { e.target.classList.add('in-view'); io.unobserve(e.target); } });
-    }, {threshold: 0.15});
-    targets.forEach(function(el){ io.observe(el); });
-  }
-  if (!reduced) {
-    var layer = document.getElementById('heroFloat');
-    if (layer) {
-      var ticking = false;
-      window.addEventListener('scroll', function(){
-        if (!ticking) {
-          requestAnimationFrame(function(){
-            layer.style.transform = 'translateY(' + ((window.scrollY || 0) * 0.35) + 'px)';
-            ticking = false;
-          });
-          ticking = true;
-        }
-      }, {passive: true});
-    }
-  }
 })();
 </script>
 </body>
