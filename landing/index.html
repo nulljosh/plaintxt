@@ -144,7 +144,9 @@
     </nav>
   </div>
   <p class="legal">&copy; 2026 Joshua Trommel &middot; MIT License</p>
+  <canvas class="footer-scene" aria-hidden="true"></canvas>
 </footer>
+<script src="footer-scene.js" defer></script>
 <script>
 // Same rules as ios/App/Stats.swift: empty doc is 1 line, no line for a trailing newline.
 (function () {
@@ -162,6 +164,19 @@
   }
   t.addEventListener('input', update);
   update();
+})();
+</script>
+<script>
+// The demo types by itself behind the hero; the counter below it is the real one.
+(function () {
+  var t = document.getElementById('demoText'); if (!t || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var lines = ['Open a file. Type. Done.', '# Notes\n\nA text file is a string.', 'func greet() {\n  print("hello")\n}'], li = 0, ci = 0;
+  function tick() {
+    var s = lines[li]; ci++; t.value = s.slice(0, ci); t.dispatchEvent(new Event('input'));
+    if (ci < s.length) return setTimeout(tick, 55);
+    setTimeout(function () { li = (li + 1) % lines.length; ci = 0; tick(); }, 1800);
+  }
+  tick();
 })();
 </script>
 </body>
