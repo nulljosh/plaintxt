@@ -1,10 +1,11 @@
-// Footer scene: an engraved harbour town drawn by one fragment shader, ported from Atlin's FooterScene.jsx.
+// Footer scene: this app's own engraved scene, on the engine from Atlin's FooterScene.jsx.
 // Ink is the page's --scene-ink (the app accent), paper is --scene-paper. Animates only while on screen.
 (function () {
   var canvas = document.querySelector('canvas.footer-scene');
   var gl = canvas && canvas.getContext('webgl', { antialias: false, alpha: false });
   if (!gl) { if (canvas) canvas.style.display = 'none'; return; }
-  var FRAG = `
+  var FRAG = `#define WATER 0.0
+
 precision highp float;
 uniform vec2 res;
 uniform float time;
@@ -30,35 +31,31 @@ float hatch(vec2 px, float a, float s, float t) {
   return 1.0 - smoothstep(t - 0.12, t + 0.12, d);
 }
 
-// Tone of the scene above the waterline, 0 = paper, 1 = solid ink. kind picks the hatch.
+// A page of text set in ink. The top line types itself and the cursor blinks.
 float scene(vec2 uv, out float kind) {
-  float x = uv.x * res.x / res.y;
-  float back = 0.40 + fbm(x * 0.9 + 4.0) * 0.42;
-  float front = 0.31 + fbm(x * 1.8 + 11.0) * 0.20;
-  // A skyline in the middle third: towers of hashed height, a few tall ones.
-  float col = floor(uv.x * 64.0);
-  float band = smoothstep(0.22, 0.32, uv.x) * (1.0 - smoothstep(0.70, 0.82, uv.x));
-  float tower = 0.30 + band * (0.04 + pow(hash(col), 2.5) * 0.24);
+  float ar = res.x / res.y, x = uv.x * ar;
   kind = 0.0;
-  if (uv.y < tower && band > 0.05) {
-    kind = 2.0;
-    float win = step(0.55, fract(uv.x * 256.0)) * step(0.5, fract(uv.y * 120.0));
-    return 0.78 - win * 0.45;
+  float lh = 0.115, row = floor(uv.y / lh), fy = fract(uv.y / lh);
+  float top = floor(0.86 / lh) - 1.0, left = 0.7;
+  if (abs(x - (left - 0.18)) < 0.005 && uv.y < 0.9) { kind = 2.0; return 0.55; }
+  if (fy < 0.025) { kind = 2.0; return 0.18; }
+  if (row > top) return 0.0;
+  float len = 1.2 + hash(row * 7.3 + 1.0) * (ar - 2.6);
+  float typed = mod(time * 0.8, ar - 1.8);
+  if (row == top) len = typed;
+  if (fy > 0.34 && fy < 0.64 && x > left && x < left + len) {
+    float w = floor((x - left) * 2.6 + hash(row) * 3.0);
+    if (fract((x - left) * 2.6 + hash(row) * 3.0) > 0.86 && hash(w * 3.1 + row * 11.0) > 0.35) return 0.0;
+    kind = 1.0; return 0.72;
   }
-  // Light from the left: slopes facing away from it take more ink.
-  float slopeF = (lo(x * 1.8 + 11.08) - lo(x * 1.8 + 10.92)) / 0.16;
-  float slopeB = (lo(x * 0.9 + 4.08) - lo(x * 0.9 + 3.92)) / 0.16;
-  if (uv.y < front) { kind = 1.0; return clamp(0.45 + slopeF * 0.35 + (front - uv.y) * 0.9, 0.2, 0.9); }
-  if (uv.y < back) { kind = 3.0; return clamp(0.24 + slopeB * 0.3 + (back - uv.y) * 0.6, 0.08, 0.7); }
-  // Sky: a few soft clouds, barely inked.
-  float c = noise2(vec2(x * 2.0 + time * 0.01, uv.y * 5.0));
-  return smoothstep(0.62, 0.9, c) * 0.18 * smoothstep(0.55, 0.9, uv.y);
+  if (row == top && abs(x - (left + len + 0.05)) < 0.012 && fy > 0.22 && fy < 0.78 && fract(time * 1.1) < 0.55) { kind = 2.0; return 0.98; }
+  return 0.0;
 }
 
 void main() {
   vec2 px = gl_FragCoord.xy;
   vec2 uv = px / res;
-  float water = 0.30;
+  float water = WATER;
   float kind;
   float tone;
   if (uv.y < water) {
