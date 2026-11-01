@@ -14,8 +14,8 @@ struct EditorView: View {
     @State private var outlining = false
     @State private var goingToLine = false
     @State private var lineInput = ""
-    #if os(iOS)
     @AppStorage("showLineNumbers") private var showLineNumbers = false
+    #if os(iOS)
     @Environment(\.horizontalSizeClass) private var sizeClass
     @StateObject private var controller = EditorController()
     #endif
@@ -144,6 +144,7 @@ struct EditorView: View {
                 #endif
                 .findNavigator(isPresented: $finding)
                 .scrollContentBackground(.hidden)
+                .background(LineRulerAttach(shown: showLineNumbers))
                 .padding(.horizontal, 16)
                 .padding(.top, 8)
     }
@@ -230,6 +231,7 @@ struct EditorView: View {
             Button { finding.toggle() } label: { Label("Find and Replace", systemImage: "magnifyingglass") }
                 .help("Find and replace")
             Menu {
+                Toggle(isOn: $showLineNumbers) { Label("Line Numbers", systemImage: "list.number") }
                 Button { lineInput = ""; goingToLine = true } label: { Label("Go to Line", systemImage: "arrow.right.to.line") }
                     .keyboardShortcut("l", modifiers: .command)
                 Button { outlining = true } label: { Label("Outline", systemImage: "list.bullet.indent") }
