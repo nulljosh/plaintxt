@@ -107,8 +107,8 @@ h3 { font-size: 28px; line-height: 32px; font-weight: 600; letter-spacing: -.02e
 .term .dim { color: var(--sub); }
 .term figcaption { margin-top: var(--sp-3); font-size: var(--size-footnote); color: var(--sub); }
 .plats { border-top: 1px solid var(--line); }
-.plat-row { display: flex; justify-content: center; margin-top: var(--sp-7); }
-.plat-row > div { max-width: 440px; padding: var(--sp-6); border-radius: 4px; border: 1px solid var(--line); display: grid; gap: var(--sp-2); justify-items: center; }
+.plat-row { display: flex; flex-wrap: wrap; gap: var(--sp-4); justify-content: center; margin-top: var(--sp-7); }
+.plat-row > div { flex: 1 1 240px; min-width: 0; max-width: 440px; padding: var(--sp-6); border-radius: 4px; border: 1px solid var(--line); display: grid; gap: var(--sp-2); justify-items: center; }
 .plat-row small { font-size: 12px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--sub); }
 .plat-row b { font-weight: 700; font-size: 36px; line-height: 44px; letter-spacing: -.03em; }
 .plat-row p { color: var(--sub); font-size: 15px; line-height: 22px; margin-bottom: var(--sp-3); }
