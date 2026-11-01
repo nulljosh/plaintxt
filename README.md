@@ -12,7 +12,7 @@ That's the gap.
 
 Live at [plain.jaybulb.com](https://plain.jaybulb.com).
 
-<p><img src="screenshots/mac.png" width="560" alt="Plain on Mac colouring a Swift file"> <img src="screenshots/iphone.png" width="180" alt="Plain on iPhone"></p>
+<p><img src="screenshots/mac.png" width="560" alt="Plain on Mac: a Swift file with the Agent, Output and Terminal panes"> <img src="screenshots/iphone.png" width="180" alt="Plain on iPhone"></p>
 
 <img src="progress.svg" width="460">
 
