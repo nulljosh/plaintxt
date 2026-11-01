@@ -10,14 +10,14 @@ struct EditorView: View {
     @State private var completing = false
     @State private var notice: String?
     @State private var finding = false
-    #if os(iOS)
-    @AppStorage("showLineNumbers") private var showLineNumbers = false
-    @Environment(\.horizontalSizeClass) private var sizeClass
-    @StateObject private var controller = EditorController()
     @State private var previewing = false
     @State private var outlining = false
     @State private var goingToLine = false
     @State private var lineInput = ""
+    #if os(iOS)
+    @AppStorage("showLineNumbers") private var showLineNumbers = false
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    @StateObject private var controller = EditorController()
     #endif
 
     private var highlighter: Highlighter { Highlighter(type: document.type, size: fontSize, monospaced: monospaced) }
@@ -95,14 +95,6 @@ struct EditorView: View {
                    showLineNumbers: showLineNumbers, controller: controller)
     }
 
-    private var preview: some View { MarkdownPreviewView(text: document.text, size: fontSize) }
-
-    private func goToLine() {
-        defer { lineInput = "" }
-        guard let n = LineIndex.parse(lineInput) else { notice = "Not a line number"; clearNotice(); return }
-        jump(to: n)
-    }
-
     private func jump(to line: Int) {
         if sizeClass != .regular { previewing = false }   // side by side keeps the preview; a phone swaps back to the editor
         // The editor may only just have reappeared; give it a beat to exist.
@@ -111,6 +103,33 @@ struct EditorView: View {
     #else
     private var editorPane: some View {
         VStack(spacing: 0) {
+            Group {
+                if previewing { HSplitView { macEditor; preview } } else { macEditor }
+            }
+            footer
+        }
+        .toolbar { toolbar }
+        .sheet(isPresented: $outlining) {
+            OutlineSheet(items: Outline.items(in: document.text, kind: document.type.kind)) { jump(to: $0) }
+                .frame(minWidth: 360, minHeight: 420)
+        }
+        .alert("Go to Line", isPresented: $goingToLine) {
+            TextField("1 to \(LineIndex(document.text).count)", text: $lineInput)
+            Button("Go") { goToLine() }
+            Button("Cancel", role: .cancel) {}
+        }
+    }
+
+    /// Puts the caret at the start of a 1-based line. TextEditor scrolls to keep the caret in view.
+    private func jump(to line: Int) {
+        let s = String(text.characters)
+        let off = LineIndex(s).offset(ofLine: line)
+        let n = s.distance(from: s.startIndex, to: String.Index(utf16Offset: off, in: s))
+        let i = text.characters.index(text.startIndex, offsetBy: n)
+        selection = AttributedTextSelection(range: i..<i)
+    }
+
+    private var macEditor: some View {
             TextEditor(text: $text, selection: $selection)
                 // Colour lives in the view; the document stays a String.
                 .onChange(of: text) { if String(text.characters) != document.text { document.text = String(text.characters); recolor() } }
@@ -127,11 +146,16 @@ struct EditorView: View {
                 .scrollContentBackground(.hidden)
                 .padding(.horizontal, 16)
                 .padding(.top, 8)
-            footer
-        }
-        .toolbar { toolbar }
     }
     #endif
+
+    private var preview: some View { MarkdownPreviewView(text: document.text, size: fontSize) }
+
+    private func goToLine() {
+        defer { lineInput = "" }
+        guard let n = LineIndex.parse(lineInput) else { notice = "Not a line number"; clearNotice(); return }
+        jump(to: n)
+    }
 
     // Ask the local model to fill in at the cursor. Inserts at wherever the cursor is when the answer arrives.
     private func complete() {
@@ -205,6 +229,14 @@ struct EditorView: View {
             #else
             Button { finding.toggle() } label: { Label("Find and Replace", systemImage: "magnifyingglass") }
                 .help("Find and replace")
+            Menu {
+                Button { lineInput = ""; goingToLine = true } label: { Label("Go to Line", systemImage: "arrow.right.to.line") }
+                    .keyboardShortcut("l", modifiers: .command)
+                Button { outlining = true } label: { Label("Outline", systemImage: "list.bullet.indent") }
+                    .keyboardShortcut("o", modifiers: [.command, .shift])
+                Toggle(isOn: $previewing) { Label("Markdown Preview", systemImage: "doc.richtext") }
+            } label: { Label("View", systemImage: "sidebar.squares.left") }
+                .help("Go to Line, Outline, Markdown Preview")
             #endif
             Menu {
                 ForEach(TextTool.allCases) { tool in
@@ -233,7 +265,6 @@ struct EditorView: View {
     }
 }
 
-#if os(iOS)
 /// Headings or symbols; tap one and the editor jumps there.
 struct OutlineSheet: View {
     let items: [OutlineItem]
@@ -262,11 +293,12 @@ struct OutlineSheet: View {
                 }
             }
             .navigationTitle("Outline")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarBackButtonHidden(true)
+            #endif
             .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { dismiss() } } }
         }
         .presentationDetents([.medium, .large])
     }
 }
-#endif

@@ -3,7 +3,7 @@
 ## Next
 - [ ] Live Agent IDE demo on the landing page: clickable file sidebar + syntax-highlighted code + Chat/Build/Terminal tabs, using real content pulled from the repo (Stats.swift, README, Checks/main.swift), not placeholder text. Keep it framed as Mac-only (the real feature is macOS-only) rather than switching device frame by visitor platform. The top "What it looks like" editor demo can stay/become cross-platform (device frame by user agent) since that part of the app really is cross-platform.
 - [ ] Refresh root `screenshots/mac.png` and `screenshots/iphone.png` referenced by README.md, predate the IDE feature bump (file browser, agent chat, output/terminal panes)
-- [ ] Line numbers, Go to Line, outline and preview on the Mac (iOS has them)
+- [ ] (11-01: Go to Line ⌘L, Outline ⇧⌘O and Markdown Preview now on the Mac; line numbers still iOS-only, needs an NSTextView wrap) Line numbers, Go to Line, outline and preview on the Mac (iOS has them)
 - [ ] Current line highlight
 - [ ] Extend IDE panes to iOS (currently macOS only)
 
