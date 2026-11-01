@@ -1,0 +1,7 @@
+/* Plain brand tokens. The accent is the only colour this app owns; spacing, radii and type come from the shared system. */
+:root {
+  --accent: #a8142e;
+  --accent-light: #e8445a;
+  --accent-deep: #a8142e;
+  --accent-ring: color-mix(in srgb, #a8142e 30%, transparent);
+}
