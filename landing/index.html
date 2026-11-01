@@ -35,12 +35,15 @@
 .jb-msg:target{display:block}
 </style>
 <script src="landing.js" defer></script>
+<script src="ide-files.js" defer></script>
+<script src="ide.js" defer></script>
 </head>
 <body>
 
 <header class="nav" aria-label="Site">
   <nav class="nav-links" aria-label="Main">
     <a href="#features">Why</a>
+    <a href="#ide">IDE</a>
     <a href="#cli">CLI</a>
   </nav>
   <a class="nav-brand" href="#top" aria-label="Plaintxt home"><img src="icon.svg" alt="" width="28" height="28"><span>Plaintxt</span></a>
@@ -90,6 +93,32 @@
     <article class="cell reveal"><p class="label">IDE</p><h3>Files, tabs, chat</h3><p>On the Mac: your repo in a sidebar, tabs, format on save, and chat that sees the open file.</p></article>
     <article class="cell reveal"><p class="label">Build</p><h3>Build, test, terminal</h3><p>Run Swift and Python tests and shell commands in the output pane.</p></article>
     <article class="cell reveal"><p class="label">Private</p><h3>No accounts, no network</h3><p>Plaintxt never talks to a server. Your file is the only thing on disk.</p></article>
+  </div>
+</section>
+
+<section class="sec field" id="ide">
+  <div class="wrap center">
+    <div class="reveal">
+      <p class="label">On the Mac</p>
+      <h2>Your repo, open</h2>
+      <p class="body">Files on the left, the code in the middle, chat, build and a terminal underneath. These are Plaintxt's own files. Click around.</p>
+    </div>
+  </div>
+  <div class="stage reveal">
+    <div class="ide" aria-label="The Plaintxt IDE on the Mac, with the app's own files">
+      <div class="editor-bar" aria-hidden="true"><i></i><i></i><i></i><span id="ideTitle">Stats.swift</span></div>
+      <div class="ide-body">
+        <nav class="ide-files" id="ideFiles" aria-label="Files"></nav>
+        <pre class="ide-code" id="ideCode" tabindex="0" aria-label="Open file"></pre>
+      </div>
+      <div class="ide-tabs" role="tablist" aria-label="Panes">
+        <button role="tab" aria-selected="true" data-pane="chat">Chat</button>
+        <button role="tab" aria-selected="false" data-pane="build">Build</button>
+        <button role="tab" aria-selected="false" data-pane="term">Terminal</button>
+        <span class="ide-stat" id="ideStat"></span>
+      </div>
+      <div class="ide-pane" id="idePane" role="tabpanel"></div>
+    </div>
   </div>
 </section>
 

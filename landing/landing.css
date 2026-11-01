@@ -172,3 +172,28 @@ h3 { font-size: 28px; line-height: 32px; font-weight: 600; letter-spacing: -.02e
 /* Footer scene from Atlin: the engraved harbour in this app's accent. */
 .foot { --scene-paper: var(--bg); --scene-ink: var(--accent); padding-bottom: 0; }
 .footer-scene { display: block; width: 100%; height: clamp(150px, 24vw, 340px); margin-top: var(--sp-6, 32px); }
+
+/* The Mac IDE demo: the app's own files, same panes as the app */
+.ide { position: relative; max-width: 960px; margin: 0 auto; background: var(--bg); color: var(--text); border-radius: 12px; overflow: hidden; box-shadow: 0 24px 64px rgba(0, 0, 0, .28); text-align: left; font-size: 13px; }
+.ide-body { display: grid; grid-template-columns: 200px 1fr; height: 360px; border-bottom: 1px solid var(--line); }
+.ide-files { border-right: 1px solid var(--line); padding: var(--sp-2); overflow: auto; background: var(--surface); }
+.ide-files button { display: block; width: 100%; text-align: left; border: 0; background: none; color: var(--text); font: inherit; padding: 6px 8px; border-radius: 6px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ide-files button[aria-current="true"] { background: var(--line); font-weight: 600; }
+.ide-files .dir { padding: 8px 8px 2px; color: var(--sub); font-size: 11px; }
+.ide-code { margin: 0; padding: var(--sp-3) var(--sp-4); overflow: auto; font: 12px/19px ui-monospace, SFMono-Regular, Menlo, monospace; tab-size: 4; counter-reset: ln; }
+.ide-code .l { display: block; min-height: 19px; padding-left: 40px; position: relative; white-space: pre; }
+.ide-code .l::before { counter-increment: ln; content: counter(ln); position: absolute; left: 0; width: 28px; text-align: right; color: var(--sub); opacity: .6; }
+.ide-code .k { color: #c2367f; font-weight: 600; } .ide-code .s { color: #c4402f; } .ide-code .c { color: var(--sub); font-style: italic; } .ide-code .t { color: #2f6db5; } .ide-code .h { font-weight: 700; }
+@media (prefers-color-scheme: dark) { .ide-code .k { color: #ff7ab2; } .ide-code .s { color: #ff8170; } .ide-code .t { color: #6bdfff; } }
+.ide-tabs { display: flex; align-items: center; gap: 4px; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+.ide-tabs button { border: 0; background: none; color: var(--sub); font: inherit; padding: 4px 12px; border-radius: 999px; cursor: pointer; }
+.ide-tabs button[aria-selected="true"] { background: var(--line); color: var(--text); font-weight: 600; }
+.ide-stat { margin-left: auto; color: var(--sub); font-variant-numeric: tabular-nums; }
+.ide-pane { height: 150px; overflow: auto; padding: var(--sp-3) var(--sp-4); font: 12px/19px ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; }
+.ide-pane .me { color: var(--sub); } .ide-pane .ok { color: var(--live); }
+@media (max-width: 640px) {
+  .ide-body { grid-template-columns: 1fr; grid-template-rows: auto 1fr; height: 420px; }
+  .ide-files { display: flex; gap: 4px; border-right: 0; border-bottom: 1px solid var(--line); overflow-x: auto; }
+  .ide-files button { width: auto; } .ide-files .dir { display: none; }
+  .ide-stat { display: none; }
+}
