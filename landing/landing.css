@@ -1,4 +1,4 @@
-/* Tripwire landing, the house layout Hermes set: a thin red frame, giant tight headlines, tiny caps labels,
+/* Plaintxt landing, the house layout Hermes set: no frame (the page is black and white), giant tight headlines, tiny caps labels,
    small square buttons, and full-bleed red bands. The band art is tripwire's own output, a wall of diff cards.
    Every colour and radius comes from tokens.css. */
 :root {
@@ -36,8 +36,6 @@ h3 { font-size: 28px; line-height: 32px; font-weight: 600; letter-spacing: -.02e
 .nav-links a:hover, .nav-get:hover { color: var(--text); }
 .nav-brand { grid-column: 2; }
 .nav-end { grid-column: 3; justify-self: end; display: flex; align-items: center; gap: var(--sp-5); }
-/* the thin blue frame down both edges of the window */
-@media (min-width: 900px) { body::after { content: ""; position: fixed; inset: 0; border-inline: 4px solid var(--frame); pointer-events: none; z-index: 30; } }
 
 .hero { padding: var(--sp-9) 0 var(--sp-8); }
 .lead { max-width: 560px; margin: var(--sp-6) auto 0; color: var(--sub); }
