@@ -95,7 +95,13 @@ struct CodeEditor: UIViewRepresentable {
             (tv.superview as? EditorContainer)?.update(lineNumbers: parent.showLineNumbers, lines: LineIndex(tv.text), size: parent.size, monospaced: parent.monospaced)
         }
 
-        func scrollViewDidScroll(_ scrollView: UIScrollView) { (scrollView.superview as? EditorContainer)?.gutter.setNeedsDisplay() }
+        func scrollViewDidScroll(_ scrollView: UIScrollView) {
+            guard let c = scrollView.superview as? EditorContainer else { return }
+            c.gutter.setNeedsDisplay()
+            c.placeLineHighlight()
+        }
+
+        func textViewDidChangeSelection(_ tv: UITextView) { (tv.superview as? EditorContainer)?.placeLineHighlight() }
 
         func restyle(_ tv: UITextView, parent p: CodeEditor) {
             let s = tv.text ?? ""
@@ -130,11 +136,17 @@ struct CodeEditor: UIViewRepresentable {
 final class EditorContainer: UIView {
     let textView = UITextView(usingTextLayoutManager: false)
     let gutter = GutterView()
+    /// The caret's line, a faint band behind the text. Hidden while a range is selected.
+    let lineHighlight = UIView()
     private var gutterWidth: CGFloat = 0
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         gutter.textView = textView
+        lineHighlight.backgroundColor = UIColor.label.withAlphaComponent(0.05)
+        lineHighlight.isUserInteractionEnabled = false
+        lineHighlight.accessibilityIdentifier = "currentLine"
+        addSubview(lineHighlight)
         addSubview(textView)
         addSubview(gutter)
         gutter.isOpaque = false
@@ -168,6 +180,27 @@ final class EditorContainer: UIView {
         gutter.frame = CGRect(x: 0, y: 0, width: gutterWidth, height: bounds.height)
         textView.frame = CGRect(x: gutterWidth, y: 0, width: bounds.width - gutterWidth, height: bounds.height)
         gutter.setNeedsDisplay()
+        placeLineHighlight()
+    }
+
+    /// Puts the band over every fragment of the caret's line, so a wrapped line lights up whole.
+    func placeLineHighlight() {
+        let tv = textView, text = tv.text as NSString
+        let sel = tv.selectedRange
+        guard sel.length == 0 else { lineHighlight.isHidden = true; return }
+        let lm = tv.layoutManager
+        let line = text.length == 0 ? NSRange(location: 0, length: 0) : text.lineRange(for: NSRange(location: min(sel.location, text.length), length: 0))
+        var rect: CGRect
+        if line.length == 0 || line.location >= text.length {
+            rect = lm.extraLineFragmentRect
+            if rect.isEmpty, text.length > 0 { rect = lm.lineFragmentRect(forGlyphAt: lm.glyphIndexForCharacter(at: text.length - 1), effectiveRange: nil) }
+        } else {
+            let glyphs = lm.glyphRange(forCharacterRange: line, actualCharacterRange: nil)
+            rect = lm.boundingRect(forGlyphRange: glyphs, in: tv.textContainer)
+        }
+        let y = rect.minY + tv.textContainerInset.top - tv.contentOffset.y
+        lineHighlight.frame = CGRect(x: gutterWidth, y: y, width: bounds.width - gutterWidth, height: max(rect.height, 1))
+        lineHighlight.isHidden = false
     }
 }
 
