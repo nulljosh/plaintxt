@@ -1,5 +1,5 @@
 /* Plaintxt landing, the house layout Hermes set: no frame (the page is black and white), giant tight headlines, tiny caps labels,
-   small square buttons, and full-bleed red bands. The band art is tripwire's own output, a wall of diff cards.
+   small square buttons, and full-bleed black bands.
    Every colour and radius comes from tokens.css. */
 :root {
   --scan: repeating-linear-gradient(to bottom, #000 0 1.5px, transparent 1.5px 3px);  /* scanlines for the engravings */
@@ -47,21 +47,6 @@ h3 { font-size: 28px; line-height: 32px; font-weight: 600; letter-spacing: -.02e
 .demo-wrap { margin: var(--sp-8) clamp(0px, 3vw, 44px) 0; }
 .stage { position: relative; overflow: hidden; background: var(--grain), var(--band); padding: clamp(24px, 6vw, 96px) clamp(12px, 7vw, 128px); }
 .stage-art { position: absolute; inset: 0; }
-.wall { position: absolute; inset: -6%; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 10px; opacity: .55; pointer-events: none; user-select: none; }
-.wall-col { display: flex; min-width: 0; flex-direction: column; gap: 10px; animation: drift var(--dur) linear infinite; }
-.wall-col.down { animation-direction: reverse; }
-@keyframes drift { from { transform: translateY(0); } to { transform: translateY(-50%); } }
-.wtile { border: 1px solid var(--band-line); border-radius: 4px; padding: 8px 10px; font: 11px/17px ui-monospace, SFMono-Regular, Menlo, monospace; white-space: nowrap; overflow: hidden; color: var(--band-art); }
-/* the issue tripwire files, as GitHub draws it */
-.issue { position: relative; max-width: 620px; margin: 0 auto; text-align: left; background: var(--bg); color: var(--text); border-radius: 10px; overflow: hidden; box-shadow: 0 24px 64px rgba(0, 0, 0, .28); }
-.issue-head { padding: var(--sp-4) var(--sp-5); border-bottom: 1px solid var(--line); }
-.issue-title { font-weight: 600; font-size: 18px; line-height: 26px; }
-.issue-meta { margin-top: var(--sp-2); display: flex; flex-wrap: wrap; gap: var(--sp-2); align-items: center; font-size: var(--size-footnote); color: var(--sub); }
-.issue-open { background: var(--live); color: #fff; border-radius: var(--r-pill); padding: 2px 10px; font-weight: 600; }
-.issue-body { padding: var(--sp-4) var(--sp-5) var(--sp-5); display: grid; gap: var(--sp-3); font-size: 15px; line-height: 22px; }
-.issue-body ul { padding-left: var(--sp-5); display: grid; gap: var(--sp-1); }
-.issue-body pre, .term pre { font: 13px/20px ui-monospace, SFMono-Regular, Menlo, monospace; overflow-x: auto; }
-.issue-body pre { padding: var(--sp-3) var(--sp-4); background: var(--surface); border: 1px solid var(--line); border-radius: 4px; }
 .rm { color: var(--bad); } .add { color: var(--live); }
 .shot { position: relative; display: block; width: 100%; max-width: 1040px; height: auto; margin: 0 auto; border-radius: 10px; box-shadow: 0 24px 64px rgba(0, 0, 0, .28); }
 .demo-hint { margin-top: var(--sp-3); font-size: var(--size-footnote); color: var(--sub); text-align: center; }
@@ -152,7 +137,6 @@ h3 { font-size: 28px; line-height: 32px; font-weight: 600; letter-spacing: -.02e
   html { scroll-behavior: auto; }
   .js .reveal { opacity: 1; transform: none; transition: none; }
   .btn, .row { transition: none; }
-  .wall-col { animation: none; }
 }
 
 /* no engraving above the band head: the copy starts the band */

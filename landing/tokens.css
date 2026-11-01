@@ -1,11 +1,11 @@
-/* Tripwire design tokens. One source for the landing (brand/tokens.css is the same file).
-   Shared house system: 8 point grid, one radius set, 48 point capsule controls, the system font. Red is the only colour Tripwire owns. */
+/* Plaintxt design tokens. One source for the landing (brand/tokens.css is the same file).
+   Shared house system: 8 point grid, one radius set, 48 point capsule controls, the system font. Black and white; the icon carries the only colour. */
 :root {
   /* colour */
   --accent: #171717;          /* actions and links, AA on white */
   --btn: #171717;             /* solid buttons, white label */
   --frame: #171717;           /* the thin frame down the window edges */
-  --band: #171717;            /* full-bleed red sections */
+  --band: #171717;            /* full-bleed black sections */
   --band-sub: #d6d6d6;        /* secondary text on the band, AA */
   --band-art: #8a8a8a;        /* the diff wall on the band */
   --band-line: rgba(255, 255, 255, .22);
