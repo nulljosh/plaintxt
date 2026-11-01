@@ -22,6 +22,6 @@
 - [ ] native (kmp) port, sibling apps have one, this doesn't (project-sync 2026-09-05)
 
 ## Ingested 2026-10-16
-- [ ] iOS ship to App Store. iOS 1.0.0 is waiting for review after the 2026-10-05 4.3 / 4.2.6 message; Joshua's note on 10-14: "Spam". Mac live. (screenshots: notes/attachments/2026-10-16/plain-1.png, notes/attachments/2026-10-16/plain-2.png)
+- [ ] (11-01: Apple re-rejected iOS 1.0.0 under 4.3 on 11-01; the nine answers were sent the same day, message 9bb8a768) iOS ship to App Store. iOS 1.0.0 is waiting for review after the 2026-10-05 4.3 / 4.2.6 message; Joshua's note on 10-14: "Spam". Mac live. (screenshots: notes/attachments/2026-10-16/plain-1.png, notes/attachments/2026-10-16/plain-2.png)
 
 ## Ingested 2026-10-30
