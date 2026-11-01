@@ -1,0 +1,21 @@
+/* Hero: Plaintxt's editor behind the copy, on its own source. Each pane types a different part of a real repo file,
+   coloured the way the app colours it, with the live line, word and character count; parallax in hero.js. */
+.hero { position: relative; isolation: isolate; overflow: hidden; min-height: calc(100svh - 56px); display: grid; align-items: center; padding: var(--sp-8) 0; }
+.hero > .hero-copy { position: relative; z-index: 2; padding-block: 0; }
+.hero::before { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(ellipse 56% 48% at 50% 50%, var(--bg) 50%, transparent 100%); }
+.hero::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 28%; z-index: 1; pointer-events: none; background: linear-gradient(transparent, var(--bg)); }
+.hero-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; transform: translate3d(0, var(--py, 0), 0); will-change: transform; }
+.pwall { height: 100%; max-width: 1440px; margin: 0 auto; padding: var(--sp-6); display: grid; grid-template-columns: repeat(3, 1fr); grid-auto-rows: 236px; gap: var(--sp-5); align-content: center; opacity: .78; text-align: left; }
+.pe { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; display: grid; grid-template-rows: auto 1fr auto; }
+.pe-hd, .pe-ft { display: flex; justify-content: space-between; gap: 12px; padding: 10px 16px; font-size: 12px; font-weight: 600; color: var(--sub); }
+.pe-hd { border-bottom: 1px solid var(--line); color: var(--text); }
+.pe-ft { border-top: 1px solid var(--line); font-variant-numeric: tabular-nums; font-weight: 500; }
+.pe pre { margin: 0; padding: 10px 16px; overflow: hidden; font: 13px/20px ui-monospace, "SF Mono", Menlo, monospace; color: var(--text); white-space: pre; }
+.pe pre::after { content: ""; display: inline-block; width: 2px; height: 15px; vertical-align: -3px; background: var(--text); animation: pe-caret 1s steps(1) infinite; }
+.pe .k { color: #c2410c; font-weight: 600; } .pe .s { color: #15803d; } .pe .t { color: #0b6ba8; } .pe .c { color: var(--sub); font-style: italic; } .pe .h { font-weight: 700; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .pe .k { color: #fb923c; } :root:not([data-theme="light"]) .pe .s { color: #4ade80; } :root:not([data-theme="light"]) .pe .t { color: #5ab0f0; } }
+@keyframes pe-caret { 50% { opacity: 0; } }
+@media (max-width: 900px) { .pwall { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .pwall { grid-template-columns: 1fr; padding: var(--sp-4); grid-auto-rows: 200px; align-content: start; padding-top: 24px; opacity: .55; } .hero::before { background: radial-gradient(ellipse 120% 46% at 50% 50%, var(--bg) 62%, transparent 100%); } }
+@media (max-width: 600px) { .nav { grid-template-columns: auto 1fr; } .nav-brand { grid-column: 1; } .nav-end { grid-column: 2; justify-self: end; } }
+@media (prefers-reduced-motion: reduce) { .pe pre::after { animation: none; } }
