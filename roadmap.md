@@ -5,7 +5,7 @@
 - [x] (11-01: Mac shot of the editor with the Agent, Output and Terminal panes; iPhone shot from the October store set) Refresh root `screenshots/mac.png` and `screenshots/iphone.png` referenced by README.md, predate the IDE feature bump (file browser, agent chat, output/terminal panes)
 - [x] (11-01: Go to Line ⌘L, Outline ⇧⌘O and Markdown Preview now on the Mac; Mac line numbers too, a ruler on the TextEditor's own NSTextView read through TextKit 2, toggle in the View menu) Line numbers, Go to Line, outline and preview on the Mac (iOS has them)
 - [x] (11-01: iOS editor, a faint band behind the caret line, whole wrapped line, hidden while selecting; Mac TextEditor still none) Current line highlight
-- [ ] Extend IDE panes to iOS (currently macOS only)
+- [x] (11-01: Agent chat on iPhone and iPad too, a sheet from the toolbar on Apple's on-device model; Build and Terminal stay Mac only, iOS apps cannot run processes) Extend IDE panes to iOS (currently macOS only)
 
 ## Done
 - 2026-10-05: iOS gets line numbers with a gutter that follows the text, Go to Line, an outline of headings and symbols that jumps the caret, and a read-only Markdown preview (side by side on iPad). The iOS editor is now a wrapped UITextView; TextDocument is unchanged. Unit tests for the line math, outline and preview parsing.

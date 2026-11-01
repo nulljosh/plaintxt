@@ -18,6 +18,7 @@ struct EditorView: View {
     #if os(iOS)
     @Environment(\.horizontalSizeClass) private var sizeClass
     @StateObject private var controller = EditorController()
+    @State private var chatting = false
     #endif
 
     private var highlighter: Highlighter { Highlighter(type: document.type, size: fontSize, monospaced: monospaced) }
@@ -80,6 +81,15 @@ struct EditorView: View {
             footer
         }
         .toolbar { toolbar }
+        .sheet(isPresented: $chatting) {
+            NavigationStack {
+                ChatView(document: $document)
+                    .navigationTitle("Agent")
+                    .navigationBarTitleDisplayMode(.inline)
+                    .toolbar { ToolbarItem(placement: .confirmationAction) { Button("Done") { chatting = false } } }
+            }
+            .presentationDetents([.medium, .large])
+        }
         .sheet(isPresented: $outlining) {
             OutlineSheet(items: Outline.items(in: document.text, kind: document.type.kind)) { jump(to: $0) }
         }
@@ -219,6 +229,7 @@ struct EditorView: View {
             }
             #endif
             #if os(iOS)
+            Button { chatting = true } label: { Label("Agent", systemImage: "bubble.left") }
             Button { controller.find() } label: { Label("Find and Replace", systemImage: "magnifyingglass") }
                 .disabled(previewing)
             Menu {

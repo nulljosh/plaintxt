@@ -1,8 +1,11 @@
-// Chat sidebar. Message history + input. Sends to ollama. macOS only.
+// Chat about the open file. The Mac asks Ollama on localhost; iPhone and iPad ask Apple's on-device model.
 // ponytail: no streaming, one request at a time, no persistence. Add if needed.
 
 import SwiftUI
 import Foundation
+#if os(iOS)
+import FoundationModels
+#endif
 
 struct Message: Identifiable {
     let id = UUID()
@@ -18,14 +21,15 @@ struct ChatView: View {
     @State private var error: String?
 
     var body: some View {
-        #if os(macOS)
         VStack(spacing: 0) {
+            #if os(macOS)
             Text("Agent")
                 .font(.caption)
                 .foregroundStyle(.secondary)
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(8)
                 .background(.bar)
+            #endif
 
             ScrollViewReader { proxy in
                 ScrollView {
@@ -75,14 +79,12 @@ struct ChatView: View {
             }
             .padding(8)
         }
+        #if os(macOS)
         .frame(minHeight: 120, maxHeight: 300)
-        #else
-        EmptyView()
         #endif
     }
 
     private func send() {
-        #if os(macOS)
         let text = input.trimmingCharacters(in: .whitespaces)
         guard !text.isEmpty else { return }
         input = ""
@@ -94,12 +96,27 @@ struct ChatView: View {
             defer { sending = false }
             do {
                 let context = "Current file: \(document.type.preferredFilenameExtension ?? "txt")\n\n\(document.text.prefix(2000))"
+                #if os(iOS)
+                let reply = try await Self.onDevice(context: context, question: text)
+                #else
                 let reply = try await Complete.fill(prefix: context + "\n\nUser: " + text, suffix: "")
+                #endif
                 messages.append(Message(text: reply.trimmingCharacters(in: .whitespaces), isUser: false))
             } catch {
                 self.error = (error as? LocalizedError)?.errorDescription ?? "Failed to get response"
             }
         }
-        #endif
     }
+
+    #if os(iOS)
+    struct Unavailable: LocalizedError {
+        var errorDescription: String? { "Chat needs Apple Intelligence turned on in Settings." }
+    }
+
+    static func onDevice(context: String, question: String) async throws -> String {
+        guard case .available = SystemLanguageModel.default.availability else { throw Unavailable() }
+        let session = LanguageModelSession(instructions: "You help with the file open in a plain text editor. Answer briefly and plainly.")
+        return try await session.respond(to: context + "\n\nQuestion: " + question).content
+    }
+    #endif
 }
