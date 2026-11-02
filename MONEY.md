@@ -1,27 +1,48 @@
 # Plaintxt Money
 
-How Plaintxt makes money. The fleet-wide ledger is `GTM.md` in the Code root.
+How Plaintxt makes money. The company plan is `REVENUE.md` in the Code root; the ledger is `GTM.md`.
 
-## Price
+## Price and rail
 
-$0.99 upfront on the App Store.
+Free (ASC 6809841903, verified 2026-11-02). Nothing is charged. The old $0.99 line is gone: the ledger says free, and free is the plan.
 
-## Rail
+## What is actually sold
 
-App Store paid download. Apple keeps 15%, so each sale pays out $0.84.
+The editor. The text stays on the device. There is no account and no server, and nothing sold belongs to anyone else.
 
-## Why
+## Who pays and why
 
-A text editor with no accounts and no server costs nothing to run. A dollar once is honest. The web version stays free, so the landing page is the trial and the store is the checkout.
+Nobody today. The people who would pay are writers and developers who want a plain editor with no account. The plan is free on purpose.
+
+## Cost to serve
+
+No paid API and no server. It is a native editor and a command line tool, so the cost to serve is nothing.
+
+## Where we are
+
+- The repo notes say no App Store record exists yet. The ledger lists ASC 6809841903. Reconcile the two.
+- Revenue: no verified number (the App Store Connect key cannot read sales yet).
+
+## Role in the company plan
+
+Free on purpose. GTM.md lists it as a text editor kept free. It serves Stage 1 as a utility that comes with the machine, if it earns a place on the grid.
 
 ## Next
 
-Nothing to build. Watch App Store Connect sales. If a month passes with installs on the web and none in the store, go back to free.
+Confirm the ASC record 6809841903 and its status. The repo notes say there is no record yet.
+
+## Million, billion, trillion
+
+**A million.** Plaintxt is the plain editor people reach for, free, with no account to make.
+
+**A billion.** Plaintxt is the default text editor on the Joshua Tree machine.
+
+**A trillion.** Plaintxt is the plain text home of the platform, a format every app on it can open.
 
 ## Change it
 
-`asc pricing schedule create --app 6809841903 --price 0.99 --base-territory USA --start-date YYYY-MM-DD`. Swap `--price 0.99` for `--free` to revert. No build, no review.
+`asc pricing schedule create --app 6809841903 --price 0.99 --base-territory USA --start-date YYYY-MM-DD` if it ever becomes paid, which is not planned. Only with Joshua's yes in chat.
 
-Anyone who got Plaintxt while it was free keeps it free. Only new customers pay.
+Anyone who got Plaintxt while it was free keeps it free.
 
-*ASC 6809841903. Set 2026-09-20.*
+*ASC 6809841903. Verified 2026-11-02.*
