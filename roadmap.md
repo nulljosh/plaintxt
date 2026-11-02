@@ -1,6 +1,11 @@
 # Plain roadmap
 
 ## Next
+- [x] (11-01: live at plain.jaybulb.com/#ide, the repo's own Stats.swift, Checks/main.swift and README via tools/ide-demo.py, real counter, Chat/Build/Terminal panes, framed as the Mac) Live Agent IDE demo on the landing page: clickable file sidebar + syntax-highlighted code + Chat/Build/Terminal tabs, using real content pulled from the repo (Stats.swift, README, Checks/main.swift), not placeholder text. Keep it framed as Mac-only (the real feature is macOS-only) rather than switching device frame by visitor platform. The top "What it looks like" editor demo can stay/become cross-platform (device frame by user agent) since that part of the app really is cross-platform.
+- [x] (11-01: Mac shot of the editor with the Agent, Output and Terminal panes; iPhone shot from the October store set) Refresh root `screenshots/mac.png` and `screenshots/iphone.png` referenced by README.md, predate the IDE feature bump (file browser, agent chat, output/terminal panes)
+- [x] (11-01: Go to Line ⌘L, Outline ⇧⌘O and Markdown Preview now on the Mac; Mac line numbers too, a ruler on the TextEditor's own NSTextView read through TextKit 2, toggle in the View menu) Line numbers, Go to Line, outline and preview on the Mac (iOS has them)
+- [x] (11-01: iOS editor, a faint band behind the caret line, whole wrapped line, hidden while selecting; Mac TextEditor still none) Current line highlight
+- [x] (11-01: Agent chat on iPhone and iPad too, a sheet from the toolbar on Apple's on-device model; Build and Terminal stay Mac only, iOS apps cannot run processes) Extend IDE panes to iOS (currently macOS only)
 
 ## Done
 - 2026-10-05: iOS gets line numbers with a gutter that follows the text, Go to Line, an outline of headings and symbols that jumps the caret, and a read-only Markdown preview (side by side on iPad). The iOS editor is now a wrapped UITextView; TextDocument is unchanged. Unit tests for the line math, outline and preview parsing.
@@ -17,6 +22,8 @@
 - [ ] native (kmp) port, sibling apps have one, this doesn't (project-sync 2026-09-05)
 
 ## Ingested 2026-10-16
-- [ ] (11-01: Apple re-rejected iOS 1.0.0 under 4.3 on 11-01; the nine answers were sent the same day, message 9bb8a768) iOS ship to App Store. iOS 1.0.0 is waiting for review after the 2026-10-05 4.3 / 4.2.6 message; Joshua's note on 10-14: "Spam". Mac live. (screenshots: notes/attachments/2026-10-16/plain-1.png, notes/attachments/2026-10-16/plain-2.png)
 
 ## Ingested 2026-10-30
+
+## Ingested 2026-10-31
+- [ ] Text Editor. Clarify: Joshua's note is only this title and description, is it the App Store subtitle/category, or a feature ask?
