@@ -27,3 +27,6 @@
 
 ## Ingested 2026-10-31
 - [ ] Text Editor. Clarify: Joshua's note is only this title and description, is it the App Store subtitle/category, or a feature ask?
+
+## Ingested 2026-11-03
+- [ ] App Review sent an "issue with your submission" email (Nov 1-2): read the reason in Resolution Center (asc web review show), no reply without Joshua's yes
