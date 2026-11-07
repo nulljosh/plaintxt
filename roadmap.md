@@ -30,3 +30,6 @@
 - [ ] Full rename to Plain.Txt or something simple. About 42 files. Bundle id com.nulljosh.plain stays. Run asc-name-creator first, the store name must be unique.
 - [ ] Feature candidates: encoding and line-ending picker, quick open by filename (Cmd-P), tab width in plain.json, Shortcuts actions, a windowed large-file mode.
 - [ ] Stack is Swift: SwiftUI shell, UITextView through UIViewRepresentable. Keep it. Profile a very large file before changing anything.
+
+## Stashed 2026-11-07
+- [ ] Next App Store version: the Mac 1.0.0 support and marketing URLs still point at plain.heyitsmejosh.com (heyitsmejosh.com lapsed, the link is dead; App Review can reject on it). Set both to https://plaintxt.jaybulb.com in the new version's localizations. Live versions cannot be edited.
