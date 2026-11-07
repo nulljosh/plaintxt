@@ -24,7 +24,6 @@
 - [ ] Text Editor. Clarify: Joshua's note is only this title and description, is it the App Store subtitle/category, or a feature ask?
 
 ## Ingested 2026-11-03
-- [x] App Review email (Nov 1-2) read 2026-11-07: iOS 1.0.0 is rejected under 4.3 spam and 4.2.6, reply on 2026-11-02 says design, content and concept are not high quality enough and "do not resubmit until significant changes have been made". Mac stays live. Next iOS submit needs real new features first (see Feature candidates below), never a resubmit as is.
 
 ## Ingested 2026-11-06
 - [ ] Full rename to Plain.Txt or something simple. About 42 files. Bundle id com.nulljosh.plain stays. Run asc-name-creator first, the store name must be unique.
