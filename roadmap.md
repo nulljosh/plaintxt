@@ -27,7 +27,6 @@
 - [ ] App Review sent an "issue with your submission" email (Nov 1-2): read the reason in Resolution Center (asc web review show), no reply without Joshua's yes
 
 ## Ingested 2026-11-06
-- [ ] Full rename to Plain.Txt or something simple.
-- [ ] Nice brand. Needs design system, brand kit, landing page etc.
-- [ ] What other features could we add?
-- [ ] Is this native C or SwiftUI? UIKit? What is best?
+- [ ] Full rename to Plain.Txt or something simple. About 42 files. Bundle id com.nulljosh.plain stays. Run asc-name-creator first, the store name must be unique.
+- [ ] Feature candidates: encoding and line-ending picker, quick open by filename (Cmd-P), tab width in plain.json, Shortcuts actions, a windowed large-file mode.
+- [ ] Stack is Swift: SwiftUI shell, UITextView through UIViewRepresentable. Keep it. Profile a very large file before changing anything.
