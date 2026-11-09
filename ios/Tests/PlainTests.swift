@@ -5,6 +5,7 @@ import UniformTypeIdentifiers
 
 final class StatsTests: XCTestCase {
     func testEmpty() { XCTAssertEqual(Stats(""), Stats(lines: 1, words: 0, characters: 0)) }
+    func testSummaryPlurals() { XCTAssertEqual(Stats("a b").summary, "1 line, 2 words, 3 chars"); XCTAssertEqual(Stats("").summary, "1 line, 0 words, 0 chars") }
     func testOneLine() { XCTAssertEqual(Stats("hello world"), Stats(lines: 1, words: 2, characters: 11)) }
     func testTrailingNewline() { XCTAssertEqual(Stats("a\nb\n").lines, 2) }
     func testBlankLine() { XCTAssertEqual(Stats("a\n\nb").lines, 3) }
@@ -42,6 +43,32 @@ final class DocumentTests: XCTestCase {
     func testRoundTrip() throws {
         var d = TextDocument(); d.text = "a\nb"
         XCTAssertEqual(d.data, Data("a\nb".utf8))
+    }
+    func testEncodingAndEndingsSurviveASave() {
+        let crlf = Data("a\r\nb\r\n".utf8)
+        let d = read(crlf)
+        XCTAssertEqual(d.text, "a\nb\n"); XCTAssertEqual(d.lineEnding, .crlf); XCTAssertEqual(d.data, crlf)
+        let latin = Data([0x63, 0x61, 0x66, 0xe9, 0x0d])
+        let l = read(latin)
+        XCTAssertEqual(l.encoding, .windows1252); XCTAssertEqual(l.lineEnding, .cr); XCTAssertEqual(l.data, latin)
+    }
+    func testUTF16NeedsAMark() {
+        var bytes: [UInt8] = [0xff, 0xfe]; bytes += Array("hi\n".utf16).flatMap { [UInt8($0 & 0xff), UInt8($0 >> 8)] }
+        let d = read(Data(bytes))
+        XCTAssertEqual(d.encoding, .utf16); XCTAssertEqual(d.text, "hi\n"); XCTAssertEqual(d.data, Data(bytes))
+    }
+    func testUnsavableCharacterFallsBackToUTF8() {
+        var d = TextDocument(); d.text = "🍋"; d.encoding = .latin1
+        XCTAssertEqual(d.data, Data("🍋".utf8))
+    }
+    func testTabWidthDrivesTabTools() {
+        UserDefaults.standard.set(2.0, forKey: "tabWidth"); defer { UserDefaults.standard.removeObject(forKey: "tabWidth") }
+        XCTAssertEqual(TextTool.tabsToSpaces.apply("\tx"), "  x")
+        XCTAssertEqual(TextTool.spacesToTabs.apply("  x"), "\tx")
+    }
+    func testTabWidthDefaultsOnNonsense() {
+        UserDefaults.standard.set(99.0, forKey: "tabWidth"); defer { UserDefaults.standard.removeObject(forKey: "tabWidth") }
+        XCTAssertEqual(Config.tabWidth, 4)
     }
     func testTypeKept() { XCTAssertEqual(read(Data(), .swiftSource).type, .swiftSource) }
     func testSavingJSONAppliesConfig() {

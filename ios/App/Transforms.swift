@@ -41,8 +41,8 @@ enum TextTool: String, CaseIterable, Identifiable {
         case .uppercase: return s.uppercased()
         case .lowercase: return s.lowercased()
         case .titleCase: return s.capitalized
-        case .tabsToSpaces: return s.replacingOccurrences(of: "\t", with: "    ")
-        case .spacesToTabs: return s.replacingOccurrences(of: "    ", with: "\t")
+        case .tabsToSpaces: return s.replacingOccurrences(of: "\t", with: String(repeating: " ", count: Config.tabWidth))
+        case .spacesToTabs: return s.replacingOccurrences(of: String(repeating: " ", count: Config.tabWidth), with: "\t")
         }
     }
 

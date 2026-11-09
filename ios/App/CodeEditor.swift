@@ -44,6 +44,7 @@ struct CodeEditor: UIViewRepresentable {
     var size: Double
     var monospaced: Bool
     var showLineNumbers: Bool
+    var tabWidth: Int
     var controller: EditorController
 
     func makeCoordinator() -> Coordinator { Coordinator(self) }
@@ -61,6 +62,7 @@ struct CodeEditor: UIViewRepresentable {
         tv.alwaysBounceVertical = true
         tv.backgroundColor = .clear
         tv.accessibilityIdentifier = "editor"
+        tv.inputAccessoryView = KeyRow(textView: tv)
         controller.textView = tv
         tv.text = text
         context.coordinator.restyle(tv, parent: self)
@@ -79,7 +81,7 @@ struct CodeEditor: UIViewRepresentable {
             tv.selectedRange = NSRange(location: min(sel.location, (text as NSString).length), length: 0)
             changed = true
         }
-        let key = "\(type.identifier)|\(size)|\(monospaced)"
+        let key = "\(type.identifier)|\(size)|\(monospaced)|\(tabWidth)"
         if changed || context.coordinator.styleKey != key { context.coordinator.styleKey = key; context.coordinator.restyle(tv, parent: self) }
         c.update(lineNumbers: showLineNumbers, lines: LineIndex(text), size: size, monospaced: monospaced)
     }
@@ -109,6 +111,8 @@ struct CodeEditor: UIViewRepresentable {
             let para = NSMutableParagraphStyle()
             para.lineSpacing = p.size * 0.25
             let base = EditorContainer.font(p.size, monospaced: p.monospaced)
+            para.tabStops = []
+            para.defaultTabInterval = (" " as NSString).size(withAttributes: [.font: base]).width * CGFloat(p.tabWidth)
             let attrs: [NSAttributedString.Key: Any] = [.font: base, .foregroundColor: UIColor.label, .paragraphStyle: para]
             let sel = tv.selectedRange
             let st = tv.textStorage
@@ -128,6 +132,46 @@ struct CodeEditor: UIViewRepresentable {
             tv.typingAttributes = attrs
             if tv.selectedRange != sel { tv.selectedRange = sel }
         }
+    }
+}
+
+/// The keys code needs and the iPhone keyboard hides, in a row above it. Typing goes through insertText, so undo works.
+final class KeyRow: UIInputView {
+    static let keys = ["Tab", "(", ")", "{", "}", "[", "]", "<", ">", "\"", "'", "=", "+", "-", "_", "/", "\\", "|", "#", ":", ";", "`", "$", "&", "*"]
+    private weak var textView: UITextView?
+
+    init(textView: UITextView) {
+        self.textView = textView
+        super.init(frame: CGRect(x: 0, y: 0, width: 320, height: 46), inputViewStyle: .keyboard)
+        allowsSelfSizing = false
+        let scroll = UIScrollView()
+        scroll.showsHorizontalScrollIndicator = false
+        scroll.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(scroll)
+        let row = UIStackView(arrangedSubviews: Self.keys.map(button))
+        row.spacing = 6
+        row.translatesAutoresizingMaskIntoConstraints = false
+        scroll.addSubview(row)
+        NSLayoutConstraint.activate([
+            scroll.leadingAnchor.constraint(equalTo: leadingAnchor), scroll.trailingAnchor.constraint(equalTo: trailingAnchor),
+            scroll.topAnchor.constraint(equalTo: topAnchor), scroll.bottomAnchor.constraint(equalTo: bottomAnchor),
+            row.leadingAnchor.constraint(equalTo: scroll.contentLayoutGuide.leadingAnchor, constant: 8),
+            row.trailingAnchor.constraint(equalTo: scroll.contentLayoutGuide.trailingAnchor, constant: -8),
+            row.topAnchor.constraint(equalTo: scroll.topAnchor, constant: 5),
+            row.heightAnchor.constraint(equalToConstant: 36),
+        ])
+    }
+    required init?(coder: NSCoder) { fatalError() }
+
+    private func button(_ key: String) -> UIButton {
+        var c = UIButton.Configuration.gray()
+        c.title = key
+        c.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 12, bottom: 0, trailing: 12)
+        let b = UIButton(configuration: c, primaryAction: UIAction { [weak self] _ in
+            self?.textView?.insertText(key == "Tab" ? "\t" : key)
+        })
+        b.accessibilityLabel = key == "Tab" ? "Insert tab" : "Insert \(key)"
+        return b
     }
 }
 

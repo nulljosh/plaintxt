@@ -6,10 +6,16 @@ import SwiftUI
 
 enum Config {
     static let defaults: [String: Any] = [
-        "fontSize": 15.0, "monospaced": false, "model": "qwen2.5-coder:1.5b-base",
+        "fontSize": 15.0, "tabWidth": 4.0, "monospaced": false, "model": "qwen2.5-coder:1.5b-base",
         "formatOnSave": false, "keywordColor": "#FF2D55", "stringColor": "#34C759", "numberColor": "#FF9500",
         "commentColor": "#8E8E93", "linkColor": "#007AFF",
     ]
+
+    /// Spaces per tab, 1 to 16. Unset or nonsense means 4.
+    static var tabWidth: Int {
+        let w = UserDefaults.standard.double(forKey: "tabWidth")
+        return w >= 1 && w <= 16 ? Int(w) : 4
+    }
 
     /// "#RRGGBB" from the config, falling back to the default.
     static func color(_ key: String) -> Color {

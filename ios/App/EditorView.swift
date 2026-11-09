@@ -16,6 +16,7 @@ struct EditorView: View {
     @State private var lineInput = ""
     @AppStorage("showLineNumbers") private var showLineNumbers = false
     #if os(iOS)
+    @AppStorage("tabWidth") private var tabWidth = 4.0
     @Environment(\.horizontalSizeClass) private var sizeClass
     @StateObject private var controller = EditorController()
     @State private var chatting = false
@@ -81,6 +82,7 @@ struct EditorView: View {
             footer
         }
         .toolbar { toolbar }
+        .background { keyboardShortcuts }
         .sheet(isPresented: $chatting) {
             NavigationStack {
                 ChatView(document: $document)
@@ -102,7 +104,21 @@ struct EditorView: View {
 
     private var codeEditor: some View {
         CodeEditor(text: $document.text, type: document.type, size: fontSize, monospaced: monospaced,
-                   showLineNumbers: showLineNumbers, controller: controller)
+                   showLineNumbers: showLineNumbers, tabWidth: Config.tabWidth, controller: controller)
+            .id(tabWidth)   // a width change restyles through a fresh view; the text lives in the document
+    }
+
+    /// iPad keyboard commands. Invisible buttons, because a shortcut inside a closed iOS menu is not registered.
+    private var keyboardShortcuts: some View {
+        Group {
+            Button("Go to Line") { lineInput = ""; goingToLine = true }.keyboardShortcut("l", modifiers: .command)
+            Button("Outline") { outlining = true }.keyboardShortcut("o", modifiers: [.command, .shift])
+            Button("Markdown Preview") { previewing.toggle() }.keyboardShortcut("p", modifiers: [.command, .shift])
+            Button("Line Numbers") { showLineNumbers.toggle() }.keyboardShortcut("n", modifiers: [.command, .shift])
+            Button("Agent") { chatting = true }.keyboardShortcut("k", modifiers: [.command, .shift])
+        }
+        .opacity(0)
+        .accessibilityHidden(true)
     }
 
     private func jump(to line: Int) {
@@ -209,12 +225,29 @@ struct EditorView: View {
         HStack {
             if let notice { Text(notice).foregroundStyle(.red).lineLimit(1) }
             Spacer()
+            formatMenu
             Text(Stats(document.text).summary).monospacedDigit().foregroundStyle(.secondary)
         }
             .font(.footnote)
             .padding(.horizontal, 16)
             .padding(.vertical, 6)
             .background(.bar)
+    }
+
+    /// What the file is on disk, and the place to change it.
+    private var formatMenu: some View {
+        Menu("\(document.encoding.rawValue) · \(document.lineEnding.title)") {
+            Picker("Encoding", selection: $document.encoding) {
+                ForEach(TextEncoding.allCases) { Text($0.rawValue).tag($0).disabled(!document.text.canBeConverted(to: $0.encoding)) }
+            }
+            .pickerStyle(.inline)
+            Picker("Line Endings", selection: $document.lineEnding) {
+                ForEach(LineEnding.allCases) { Text($0.title).tag($0) }
+            }
+            .pickerStyle(.inline)
+        }
+        .fixedSize()
+        .accessibilityIdentifier("formatMenu")
     }
 
     @ToolbarContentBuilder
@@ -237,6 +270,10 @@ struct EditorView: View {
                 Button { lineInput = ""; goingToLine = true } label: { Label("Go to Line", systemImage: "arrow.right.to.line") }
                 Button { outlining = true } label: { Label("Outline", systemImage: "list.bullet.indent") }
                 Toggle(isOn: $previewing) { Label("Markdown Preview", systemImage: "doc.richtext") }
+                Picker(selection: $tabWidth) {
+                    ForEach([2.0, 4.0, 8.0], id: \.self) { Text("\(Int($0)) Spaces").tag($0) }
+                } label: { Label("Tab Width", systemImage: "arrow.right.to.line.compact") }
+                    .pickerStyle(.menu)
             } label: { Label("View", systemImage: "sidebar.squares.left") }
             #else
             Button { finding.toggle() } label: { Label("Find and Replace", systemImage: "magnifyingglass") }

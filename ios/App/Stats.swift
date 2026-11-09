@@ -17,7 +17,7 @@ struct Stats: Equatable {
         characters = text.count
     }
 
-    var summary: String { "\(lines) lines, \(words) words, \(characters) chars" }
+    var summary: String { "\(lines) \(lines == 1 ? "line" : "lines"), \(words) \(words == 1 ? "word" : "words"), \(characters) \(characters == 1 ? "char" : "chars")" }
 }
 
 extension Stats {
