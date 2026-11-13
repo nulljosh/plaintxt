@@ -32,3 +32,6 @@
 
 ## Stashed 2026-11-07
 - [ ] Next App Store version: the Mac 1.0.0 support and marketing URLs still point at plain.heyitsmejosh.com (heyitsmejosh.com lapsed, the link is dead; App Review can reject on it). Set both to https://plaintxt.jaybulb.com in the new version's localizations. Live versions cannot be edited.
+
+## Ingested 2026-11-13
+- [ ] Note was the title only ("Plaintxt"), written in a run of App Review status checks. Report its review status. Last known (2026-11-08): iOS 1.1.0 in on its last try. Could not re-pull today: the asc API is blocked by an unaccepted Apple agreement (see vault blocked-on-joshua.md).
